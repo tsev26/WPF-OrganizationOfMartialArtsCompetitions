@@ -21,6 +21,21 @@
             <DataTemplate DataType="{x:Type viewmodels:ContestantViewModel}">
                 <views:ContestantView />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:ContestantAddOrUpdateViewModel}">
+                <views:ContestantAddOrUpdateView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:TournamentAddContestantsViewModel}">
+                <views:TournamentAddContestantsView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:TournamentAddOrUpdateViewModel}">
+                <views:TournamentAddOrUpdateView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:TournamentListViewModel}">
+                <views:TournamentListView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:TournamentSelectedViewModel}">
+                <views:TournamentSelectedView />
+            </DataTemplate>
         </Grid.Resources>
 
         <ContentControl Content="{Binding CurrentViewModel}" />

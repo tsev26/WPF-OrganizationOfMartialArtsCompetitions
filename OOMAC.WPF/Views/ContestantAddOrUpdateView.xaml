@@ -1,20 +1,14 @@
 ﻿<UserControl
-    x:Class="OOMAC.WPF.Views.ContestantView"
+    x:Class="OOMAC.WPF.Views.ContestantAddOrUpdateView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:OOMAC.WPF.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:OOMAC.WPF.ViewModels"
-    d:DataContext="{d:DesignInstance vm:ContestantViewModel}"
+    d:DataContext="{d:DesignInstance vm:ContestantAddOrUpdateViewModel}"
     d:DesignHeight="800"
     d:DesignWidth="1200"
     mc:Ignorable="d">
-    <StackPanel>
-        <TextBlock Margin="10" Text="Contestant" />
-        <Button
-            Margin="10"
-            Command="{Binding NavigateHomeCommand}"
-            Content="Home" />
-    </StackPanel>
+    <Grid />
 </UserControl>
