@@ -6,15 +6,12 @@
     xmlns:local="clr-namespace:OOMAC.WPF.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:OOMAC.WPF.ViewModels"
+    d:Background="White"
     d:DataContext="{d:DesignInstance vm:HomeViewModel}"
     d:DesignHeight="800"
     d:DesignWidth="1200"
     mc:Ignorable="d">
     <StackPanel>
         <TextBlock Margin="10" Text="Home" />
-        <Button
-            Margin="10"
-            Command="{Binding NavigateContestantCommand}"
-            Content="Contestant" />
     </StackPanel>
 </UserControl>

@@ -6,11 +6,11 @@ namespace OOMAC.WPF.ViewModels
 {
     public class HomeViewModel : ViewModelBase
     {
-        public ICommand NavigateContestantCommand { get; }
+        
 
-        public HomeViewModel(INavigationService contestantNavigationService)
+        public HomeViewModel()
         {
-            NavigateContestantCommand = new NavigateCommand(contestantNavigationService);
+            
         }
     }
 }

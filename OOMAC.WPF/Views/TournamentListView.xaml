@@ -10,5 +10,7 @@
     d:DesignHeight="800"
     d:DesignWidth="1200"
     mc:Ignorable="d">
-    <Grid />
+    <StackPanel>
+        <TextBlock Margin="10" Text="TournamentList" />
+    </StackPanel>
 </UserControl>

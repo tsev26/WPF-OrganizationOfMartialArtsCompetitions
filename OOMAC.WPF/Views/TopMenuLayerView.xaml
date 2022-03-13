@@ -1,0 +1,59 @@
+﻿<UserControl
+    x:Class="OOMAC.WPF.Views.TopMenuLayerView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:OOMAC.WPF.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:OOMAC.WPF.ViewModels"
+    d:DataContext="{d:DesignInstance vm:TopMenuLayerViewModel}"
+    mc:Ignorable="d">
+    <Grid Background="AliceBlue">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock
+                Grid.Column="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                d:Text="Test"
+                FontSize="25"
+                Text="{Binding Title}" />
+
+            <StackPanel
+                Grid.Column="2"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal">
+                <Button
+                    Width="70"
+                    Margin="5,25"
+                    Command="{Binding NavigateHomeCommand}"
+                    Content="Menu" />
+
+                <Button
+                    Width="70"
+                    Margin="5,25"
+                    Command="{Binding NavigateContestantCommand}"
+                    Content="Závodníci" />
+
+                <Button
+                    Width="70"
+                    Margin="5,25"
+                    Command="{Binding NavigateTournamentCommand}"
+                    Content="Turnaje" />
+            </StackPanel>
+        </Grid>
+
+        <Separator Grid.Row="1" />
+    </Grid>
+</UserControl>
