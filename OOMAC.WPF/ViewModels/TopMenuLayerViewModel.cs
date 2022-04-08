@@ -19,10 +19,9 @@ namespace OOMAC.WPF.ViewModels
 
         
 
-        public TopMenuLayerViewModel(NavigationStore navigationStore,INavigationService homeNavigationService, INavigationService contestantNavigationService, INavigationService tournamentNavigationService)
+        public TopMenuLayerViewModel(NavigationStore navigationStore, INavigationService contestantNavigationService, INavigationService tournamentNavigationService)
         {
             _navigationStore = navigationStore;
-            NavigateHomeCommand = new NavigateCommand(homeNavigationService);
             NavigateContestantCommand = new NavigateCommand(contestantNavigationService);
             NavigateTournamentCommand = new NavigateCommand(tournamentNavigationService);
 

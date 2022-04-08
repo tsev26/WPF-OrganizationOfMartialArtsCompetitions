@@ -18,21 +18,31 @@ namespace OOMAC.WPF
             IServiceCollection services = new ServiceCollection();
 
             services.AddSingleton<NavigationStore>();
+            services.AddSingleton<TournamentStore>();
+            services.AddSingleton<ContestantStore>();
 
-            services.AddSingleton<INavigationService>(s => CreateHomeNavigationService(s));
+
+            //this set up first loaded ViewModel
+            services.AddSingleton<INavigationService>(s => CreateTournamentNavigationService(s));
 
             services.AddSingleton<OOMACDBContextFactory>();
 
             services.AddSingleton<TopMenuLayerViewModel>(s => new TopMenuLayerViewModel(
                                                                     s.GetRequiredService<NavigationStore>(), 
-                                                                    CreateHomeNavigationService(s), 
                                                                     CreateContestantNavigationService(s), 
                                                                     CreateTournamentNavigationService(s)));
             
 
             services.AddSingleton<HomeViewModel>(s => new HomeViewModel());
             services.AddSingleton<ContestantViewModel>(s => new ContestantViewModel());
-            services.AddSingleton<TournamentListViewModel>(s => new TournamentListViewModel());
+            services.AddSingleton<TournamentListViewModel>(s => new TournamentListViewModel(
+                                                                        s.GetRequiredService<TournamentStore>(),
+                                                                        CreateTournamentAddOrUpdateNavigationService(s),
+                                                                        CreateTournamentAddContestantsNavigationService(s)));
+            
+            services.AddSingleton<TournamentAddOrUpdateViewModel>(s => new TournamentAddOrUpdateViewModel());
+            services.AddSingleton<TournamentAddContestantsViewModel>(s => new TournamentAddContestantsViewModel());
+            
 
             services.AddSingleton<MainViewModel>();
             services.AddSingleton<MainWindow>(s => new MainWindow()
@@ -57,6 +67,8 @@ namespace OOMAC.WPF
         }
 
 
+        // TODO: Add private function for all navigation to all viewModels
+
         private INavigationService CreateContestantNavigationService(IServiceProvider serviceProvider)
         {
             string name = "Závodníci";
@@ -66,14 +78,6 @@ namespace OOMAC.WPF
                 name);
         }
 
-        private INavigationService CreateHomeNavigationService(IServiceProvider serviceProvider)
-        {
-            string name = "Menu";
-            return new NavigationService<HomeViewModel>(
-                serviceProvider.GetRequiredService<NavigationStore>(),
-                () => serviceProvider.GetRequiredService<HomeViewModel>(),
-                name);
-        }
 
         private INavigationService CreateTournamentNavigationService(IServiceProvider serviceProvider)
         {
@@ -84,6 +88,35 @@ namespace OOMAC.WPF
                 name);
         }
 
+        private INavigationService CreateTournamentAddContestantsNavigationService(IServiceProvider serviceProvider)
+        {
+            string name = "Přidání závodníků do turnaje";
+            return new NavigationService<TournamentAddContestantsViewModel>(
+                serviceProvider.GetRequiredService<NavigationStore>(),
+                () => serviceProvider.GetRequiredService<TournamentAddContestantsViewModel>(),
+                name);
+        }
+
+        private INavigationService CreateTournamentAddOrUpdateNavigationService(IServiceProvider serviceProvider)
+        {
+            string name = "Vytvoření / úprava turnaje";
+            return new NavigationService<TournamentAddOrUpdateViewModel>(
+                serviceProvider.GetRequiredService<NavigationStore>(),
+                () => serviceProvider.GetRequiredService<TournamentAddOrUpdateViewModel>(),
+                name);
+        }
+
+
+        /*
+        private INavigationService CreateHomeNavigationService(IServiceProvider serviceProvider)
+        {
+            string name = "Menu";
+            return new NavigationService<HomeViewModel>(
+                serviceProvider.GetRequiredService<NavigationStore>(),
+                () => serviceProvider.GetRequiredService<HomeViewModel>(),
+                name);
+        }
+        */
 
     }
 }

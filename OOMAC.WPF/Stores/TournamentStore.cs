@@ -7,21 +7,21 @@ using System.Threading.Tasks;
 
 namespace OOMAC.WPF.Stores
 {
-    public class ContestantStore
+    public class TournamentStore
     {
-        public event Action ContestantStoreChange;
+        public event Action TournamentStoreChange;
 
-        private List<Contestant> _contestants;
-        public List<Contestant> Contestants
+        private List<Tournament> _tournaments;
+        public List<Tournament> Tournaments
         {
             get
             {
-                return _contestants;
+                return _tournaments;
             }
             set
             {
-                _contestants = value;
-                ContestantStoreChange?.Invoke();
+                _tournaments = value;
+                TournamentStoreChange?.Invoke();
             }
         }
     }

@@ -18,7 +18,7 @@
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="3*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
@@ -34,12 +34,13 @@
                 Grid.Column="2"
                 HorizontalAlignment="Right"
                 Orientation="Horizontal">
+                <!--
                 <Button
                     Width="70"
                     Margin="5,25"
                     Command="{Binding NavigateHomeCommand}"
                     Content="Menu" />
-
+                -->
                 <Button
                     Width="70"
                     Margin="5,25"
