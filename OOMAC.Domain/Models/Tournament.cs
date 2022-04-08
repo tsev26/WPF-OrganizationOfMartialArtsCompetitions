@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using static OOMAC.Domain.Models.Contestant;
 
 namespace OOMAC.Domain.Models
 {

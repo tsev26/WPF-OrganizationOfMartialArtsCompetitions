@@ -44,7 +44,9 @@ namespace OOMAC.WPF
             
             services.AddSingleton<TournamentAddOrUpdateViewModel>(s => new TournamentAddOrUpdateViewModel());
             services.AddSingleton<TournamentAddContestantsViewModel>(s => new TournamentAddContestantsViewModel());
-            services.AddSingleton<ContestantAddOrUpdateViewModel>(s => new ContestantAddOrUpdateViewModel());
+            services.AddSingleton<ContestantAddOrUpdateViewModel>(s => new ContestantAddOrUpdateViewModel(
+                                                                                s.GetRequiredService<ContestantStore>(),
+                                                                                CreateContestantNavigationService(s)));
 
 
             services.AddSingleton<MainViewModel>();

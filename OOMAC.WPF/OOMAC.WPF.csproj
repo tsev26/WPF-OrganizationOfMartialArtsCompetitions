@@ -10,8 +10,4 @@
     <ProjectReference Include="..\OOMAC.EF\OOMAC.EF.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Converters\" />
-  </ItemGroup>
-
 </Project>

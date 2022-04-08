@@ -9,10 +9,7 @@ namespace OOMAC.WPF.ViewModels
 {
     public class ContestantViewModel : ViewModelBase
     {
-
-        public ICommand NavigateContestantAddOrUpdateCommand { get; }
-        public ICommand NavigateTournamentCommand { get; }
-        public ContestantStore _contestantStore { get; }
+        private ContestantStore _contestantStore;        
 
         public ContestantViewModel(ContestantStore contestantStore, INavigationService contestantAddOrUpdateNavigationService)
         {
@@ -21,6 +18,8 @@ namespace OOMAC.WPF.ViewModels
 
             _contestantStore.ContestantStoreChange += ContestantStoreChange;
         }
+
+        public ICommand NavigateContestantAddOrUpdateCommand { get; }
 
         public List<Contestant> ContestantList => _contestantStore.Contestants;
 
