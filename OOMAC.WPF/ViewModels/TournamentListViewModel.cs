@@ -23,10 +23,18 @@ namespace OOMAC.WPF.ViewModels
             _tournamentStore = tournamentStore;
             NavigateTournamentAddOrUpdateCommand = new NavigateCommand(tournamentAddOrUpdateNavigationService);
             NavigateTournamentAddContestantsCommand = new NavigateCommand(tournamentAddContestantsNavigationService);
+
+            _tournamentStore.TournamentStoreChange += TournamentStoreChange;
         }
+
 
         public List<Tournament> TournamentList => _tournamentStore.Tournaments;
 
         public Tournament SelectedTournament { get; set; }
+
+        private void TournamentStoreChange()
+        {
+            OnPropertyChanged(nameof(TournamentList));
+        }
     }
 }

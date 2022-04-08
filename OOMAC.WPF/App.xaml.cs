@@ -34,7 +34,9 @@ namespace OOMAC.WPF
             
 
             services.AddSingleton<HomeViewModel>(s => new HomeViewModel());
-            services.AddSingleton<ContestantViewModel>(s => new ContestantViewModel());
+            services.AddSingleton<ContestantViewModel>(s => new ContestantViewModel(
+                                                                    s.GetRequiredService<ContestantStore>(),
+                                                                    CreateContestantAddOrUpdateNavigationService(s)));
             services.AddSingleton<TournamentListViewModel>(s => new TournamentListViewModel(
                                                                         s.GetRequiredService<TournamentStore>(),
                                                                         CreateTournamentAddOrUpdateNavigationService(s),
@@ -42,7 +44,8 @@ namespace OOMAC.WPF
             
             services.AddSingleton<TournamentAddOrUpdateViewModel>(s => new TournamentAddOrUpdateViewModel());
             services.AddSingleton<TournamentAddContestantsViewModel>(s => new TournamentAddContestantsViewModel());
-            
+            services.AddSingleton<ContestantAddOrUpdateViewModel>(s => new ContestantAddOrUpdateViewModel());
+
 
             services.AddSingleton<MainViewModel>();
             services.AddSingleton<MainWindow>(s => new MainWindow()
@@ -103,6 +106,15 @@ namespace OOMAC.WPF
             return new NavigationService<TournamentAddOrUpdateViewModel>(
                 serviceProvider.GetRequiredService<NavigationStore>(),
                 () => serviceProvider.GetRequiredService<TournamentAddOrUpdateViewModel>(),
+                name);
+        }
+
+        private INavigationService CreateContestantAddOrUpdateNavigationService(IServiceProvider serviceProvider)
+        {
+            string name = "Vytvoření / úprava závodníka";
+            return new NavigationService<ContestantAddOrUpdateViewModel>(
+                serviceProvider.GetRequiredService<NavigationStore>(),
+                () => serviceProvider.GetRequiredService<ContestantAddOrUpdateViewModel>(),
                 name);
         }
 

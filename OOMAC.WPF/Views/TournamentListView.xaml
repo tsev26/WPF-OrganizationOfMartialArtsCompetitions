@@ -24,10 +24,10 @@
         <TextBlock
             HorizontalAlignment="Center"
             FontSize="20"
-            Text="Seznam existujících turnajů" />
+            Text="Seznam turnajů" />
 
         <ListView
-            x:Name="TournamentListView1"
+            x:Name="TournamentList"
             Margin="0,5"
             HorizontalAlignment="Center"
             FontSize="14"
