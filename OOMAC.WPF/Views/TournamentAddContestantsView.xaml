@@ -11,5 +11,113 @@
     d:DesignHeight="800"
     d:DesignWidth="1200"
     mc:Ignorable="d">
-    <Grid />
+    <StackPanel>
+        <TextBlock
+            Margin="0,25,0,0"
+            HorizontalAlignment="Center"
+            FontSize="20"
+            Text="Vybraný turnaj - název" />
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="3*" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0">
+                <TextBlock
+                    Margin="15"
+                    HorizontalAlignment="Center"
+                    FontSize="20"
+                    Text="Přiřazení závodníci" />
+
+                <ListView
+                    x:Name="TournamentContestantList"
+                    Margin="0,5"
+                    HorizontalAlignment="Center"
+                    FontSize="14"
+                    ItemsSource="{Binding TournamentContestantList}"
+                    SelectedItem="{Binding SelectedContestantTournament, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    SelectionMode="Single">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn
+                                Width="100"
+                                DisplayMemberBinding="{Binding LastName}"
+                                Header="Příjmení" />
+                            <GridViewColumn
+                                Width="100"
+                                DisplayMemberBinding="{Binding FirstName}"
+                                Header="Jméno" />
+                            <GridViewColumn
+                                Width="50"
+                                DisplayMemberBinding="{Binding Age}"
+                                Header="Věk" />
+                            <GridViewColumn
+                                Width="50"
+                                DisplayMemberBinding="{Binding TechnicallSkill}"
+                                Header="Tech. úroveň" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Margin="0,80,0,0">
+                <Button
+                    Width="80"
+                    Height="40"
+                    Margin="10"
+                    Command="{Binding CreateNewContestantCommand}"
+                    Content="Přiřadit"
+                    FontSize="20" />
+
+                <Button
+                    Width="80"
+                    Height="40"
+                    Margin="10"
+                    Command="{Binding CreateNewContestantCommand}"
+                    Content="Odebrat"
+                    FontSize="20" />
+            </StackPanel>
+
+            <StackPanel Grid.Column="2">
+                <TextBlock
+                    Margin="15"
+                    HorizontalAlignment="Center"
+                    FontSize="20"
+                    Text="Závodníci splňující kritéria" />
+
+                <ListView
+                    x:Name="ContestantList"
+                    Margin="0,5"
+                    HorizontalAlignment="Center"
+                    FontSize="14"
+                    ItemsSource="{Binding ContestantList}"
+                    SelectedItem="{Binding SelectedContestant, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    SelectionMode="Single">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn
+                                Width="100"
+                                DisplayMemberBinding="{Binding LastName}"
+                                Header="Příjmení" />
+                            <GridViewColumn
+                                Width="100"
+                                DisplayMemberBinding="{Binding FirstName}"
+                                Header="Jméno" />
+                            <GridViewColumn
+                                Width="50"
+                                DisplayMemberBinding="{Binding Age}"
+                                Header="Věk" />
+                            <GridViewColumn
+                                Width="50"
+                                DisplayMemberBinding="{Binding TechnicallSkill}"
+                                Header="Tech. úroveň" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </StackPanel>
+        </Grid>
+    </StackPanel>
 </UserControl>
