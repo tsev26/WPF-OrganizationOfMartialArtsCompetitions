@@ -1,13 +1,116 @@
-﻿using System;
+﻿using OOMAC.WPF.Commands;
+using OOMAC.WPF.Services.Navigations;
+using OOMAC.WPF.Stores;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace OOMAC.WPF.ViewModels
 {
     public class TournamentAddOrUpdateViewModel : ViewModelBase
     {
-        public TournamentAddOrUpdateViewModel() { }
+        private TournamentStore _tournamentStore;
+        public TournamentAddOrUpdateViewModel(TournamentStore tournamentStore, INavigationService tournamentNavigationService) 
+        {
+            _tournamentStore = tournamentStore;
+
+            CreateNewTournamentCommand = new CreateNewTournamentCommand(this, tournamentNavigationService);
+
+            _tournamentStore.TournamentSelectionChange += TournamentSelectionChange;
+        }
+
+        public ICommand CreateNewTournamentCommand { get; }
+
+        public string Loader
+        {
+            get
+            {
+                MinAge = 0;
+                MaxAge = 100;
+                MinTechnickalSkill = 0;
+                MaxTechnicalSkill = 20;
+
+                return "";
+            }
+        }
+
+        private string _name;
+        public string Name
+        {
+            get
+            {
+                return _name;
+            }
+            set
+            {
+                _name = value;
+                OnPropertyChanged(nameof(Name));
+            }
+        }
+
+        private int _minAge;
+        public int MinAge
+        {
+            get
+            {
+                return _minAge;
+            }
+            set
+            {
+                _minAge = value;
+                OnPropertyChanged(nameof(MinAge));
+            }
+        }
+
+        private int _maxAge;
+        public int MaxAge
+        {
+            get
+            {
+                return _maxAge;
+            }
+            set
+            {
+                _maxAge = value;
+                OnPropertyChanged(nameof(MaxAge));
+            }
+        }
+
+        private int _minTechnicalSkill;
+        public int MinTechnickalSkill
+        {
+            get
+            {
+                return _minTechnicalSkill;
+            }
+            set
+            {
+                _minTechnicalSkill = value;
+                OnPropertyChanged(nameof(MinTechnickalSkill));
+            }
+        }
+
+        private int _maxTechnicalSkill;
+        public int MaxTechnicalSkill
+        {
+            get
+            {
+                return _maxTechnicalSkill;
+            }
+            set
+            {
+                _maxTechnicalSkill = value;
+                OnPropertyChanged(nameof(MaxTechnicalSkill));
+            }
+        }
+
+
+        private void TournamentSelectionChange()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

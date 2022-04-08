@@ -24,5 +24,21 @@ namespace OOMAC.WPF.Stores
                 TournamentStoreChange?.Invoke();
             }
         }
+
+        public event Action TournamentSelectionChange;
+
+        private Contestant _selectedTournament;
+        public Contestant SelectedTournament
+        {
+            get
+            {
+                return _selectedTournament;
+            }
+            set
+            {
+                _selectedTournament = value;
+                TournamentSelectionChange?.Invoke();
+            }
+        }
     }
 }

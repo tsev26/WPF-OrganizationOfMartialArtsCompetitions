@@ -6,6 +6,7 @@
     xmlns:local="clr-namespace:OOMAC.WPF.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:OOMAC.WPF.ViewModels"
+    d:Background="White"
     d:DataContext="{d:DesignInstance vm:TournamentAddContestantsViewModel}"
     d:DesignHeight="800"
     d:DesignWidth="1200"
