@@ -6,33 +6,26 @@ namespace OOMAC.WPF.ViewModels
     public class MainViewModel : ViewModelBase
     {
         private readonly NavigationStore _navigationStore;
-        private readonly ModalNavigationStore _modalNavigationStore;
 
         public TopMenuLayerViewModel TopMenuLayerViewModel { get; }
         public ViewModelBase CurrentViewModel => _navigationStore.CurrentViewModel;
-        public ViewModelBase CurrentModalViewModel => _modalNavigationStore.CurrentViewModel;
-        public bool IsOpen => _modalNavigationStore.IsOpen;
 
-        public MainViewModel(NavigationStore navigationStore, ModalNavigationStore modalNavigationStore, TopMenuLayerViewModel topMenuLayerViewModel)
+        public MainViewModel(NavigationStore navigationStore, TopMenuLayerViewModel topMenuLayerViewModel)
         {
             _navigationStore = navigationStore;
-            _modalNavigationStore = modalNavigationStore;
 
             TopMenuLayerViewModel = topMenuLayerViewModel;
 
             _navigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
-            _modalNavigationStore.CurrentViewModelChanged += OnCurrentModalViewModelChanged;
         }
+
+        public string CurrentViewModelName => _navigationStore.CurrentViewModelName;
 
         private void OnCurrentViewModelChanged()
         {
             OnPropertyChanged(nameof(CurrentViewModel));
+            OnPropertyChanged(nameof(CurrentViewModelName));
         }
 
-        private void OnCurrentModalViewModelChanged()
-        {
-            OnPropertyChanged(nameof(CurrentModalViewModel));
-            OnPropertyChanged(nameof(IsOpen));
-        }
     }
 }

@@ -6,6 +6,8 @@ namespace OOMAC.WPF.Stores
     public class NavigationStore : INavigationStore
     {
         private ViewModelBase _currentViewModel;
+        private string _currentViewModelName; 
+
         public ViewModelBase CurrentViewModel
         {
             get => _currentViewModel;
@@ -14,6 +16,18 @@ namespace OOMAC.WPF.Stores
                 _currentViewModel?.Dispose();
                 _currentViewModel = value;
                 OnCurrentViewModelChanged();
+            }
+        }
+
+        public string CurrentViewModelName
+        {
+            get
+            {
+                return _currentViewModelName;
+            }
+            set
+            {
+                _currentViewModelName = value;
             }
         }
 

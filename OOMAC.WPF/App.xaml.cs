@@ -18,13 +18,10 @@ namespace OOMAC.WPF
             IServiceCollection services = new ServiceCollection();
 
             services.AddSingleton<NavigationStore>();
-            services.AddSingleton<ModalNavigationStore>();
 
             services.AddSingleton<INavigationService>(s => CreateHomeNavigationService(s));
 
             services.AddSingleton<OOMACDBContextFactory>();
-
-            services.AddSingleton<CloseModalNavigationService>();
 
             services.AddSingleton<TopMenuLayerViewModel>(s => new TopMenuLayerViewModel(
                                                                     s.GetRequiredService<NavigationStore>(), 
@@ -62,23 +59,29 @@ namespace OOMAC.WPF
 
         private INavigationService CreateContestantNavigationService(IServiceProvider serviceProvider)
         {
+            string name = "Závodníci";
             return new NavigationService<ContestantViewModel>(
                 serviceProvider.GetRequiredService<NavigationStore>(),
-                () => serviceProvider.GetRequiredService<ContestantViewModel>());
+                () => serviceProvider.GetRequiredService<ContestantViewModel>(),
+                name);
         }
 
         private INavigationService CreateHomeNavigationService(IServiceProvider serviceProvider)
         {
+            string name = "Menu";
             return new NavigationService<HomeViewModel>(
                 serviceProvider.GetRequiredService<NavigationStore>(),
-                () => serviceProvider.GetRequiredService<HomeViewModel>());
+                () => serviceProvider.GetRequiredService<HomeViewModel>(),
+                name);
         }
 
         private INavigationService CreateTournamentNavigationService(IServiceProvider serviceProvider)
         {
+            string name = "Turnaje";
             return new NavigationService<TournamentListViewModel>(
                 serviceProvider.GetRequiredService<NavigationStore>(),
-                () => serviceProvider.GetRequiredService<TournamentListViewModel>());
+                () => serviceProvider.GetRequiredService<TournamentListViewModel>(),
+                name);
         }
 
 

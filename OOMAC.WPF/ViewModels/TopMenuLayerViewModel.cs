@@ -34,6 +34,6 @@ namespace OOMAC.WPF.ViewModels
             OnPropertyChanged(nameof(Title));
         }
 
-        public string Title => _navigationStore.CurrentViewModel.ToString();
+        public string Title => _navigationStore.CurrentViewModelName;
     }
 }
