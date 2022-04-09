@@ -1,6 +1,7 @@
 ﻿using OOMAC.WPF.Commands;
 using OOMAC.WPF.Services.Navigations;
 using OOMAC.WPF.Stores;
+using System;
 using System.Windows.Input;
 using static OOMAC.Domain.Models.Contestant;
 
@@ -62,17 +63,17 @@ namespace OOMAC.WPF.ViewModels
             }
         }
 
-        private int _age;
-        public int Age
+        private DateTime _dateBorn;
+        public DateTime DateBorn
         {
             get
             {
-                return _age;
+                return _dateBorn;
             }
             set
             {
-                _age = value;
-                OnPropertyChanged(nameof(Age));
+                _dateBorn = value;
+                OnPropertyChanged(nameof(DateBorn));
             }
         }
 
@@ -103,7 +104,7 @@ namespace OOMAC.WPF.ViewModels
             FirstName = _contestantStore.SelectedContestant.FirstName;
             LastName = _contestantStore.SelectedContestant.LastName;
             Email = _contestantStore.SelectedContestant.Email;
-            Age = _contestantStore.SelectedContestant.Age;
+            DateBorn = _contestantStore.SelectedContestant.DateBorn;
             TechnickalSkillDouble = (double)_contestantStore.SelectedContestant.TechSkill;
         }
 

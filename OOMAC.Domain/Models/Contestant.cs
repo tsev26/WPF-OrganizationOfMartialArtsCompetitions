@@ -23,11 +23,14 @@ namespace OOMAC.Domain.Models
         [Column("ConEmail")]
         public string Email { get; set; }
 
-        [Column("ConAge")]
-        public int Age { get; set; }
+        [Column("ConDateBorn")]
+        public DateTime DateBorn { get; set; }
+
 
         [Column("ConTechnicalSkill")]
         public TechnicalSkill TechSkill { get; set; }
+
+        public int Age => CalculateAge(DateBorn);
 
         public List<Tournament> Tournaments { get; set; }
 
@@ -75,6 +78,16 @@ namespace OOMAC.Domain.Models
             _9dan = 19,
             [Description("10dan")]
             _10dan = 20
+        }
+
+        public int CalculateAge(DateTime birthDate)
+        {
+            int age =  DateTime.Now.Year - birthDate.Year;
+
+            if (DateTime.Now.Month < birthDate.Month || (DateTime.Now.Month == birthDate.Month && DateTime.Now.Day < birthDate.Day))
+                age--;
+
+            return age;
         }
 
         public static string GetEnumDescription(Enum value)

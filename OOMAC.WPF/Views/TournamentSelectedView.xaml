@@ -6,9 +6,48 @@
     xmlns:local="clr-namespace:OOMAC.WPF.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:OOMAC.WPF.ViewModels"
+    d:Background="White"
     d:DataContext="{d:DesignInstance vm:TournamentSelectedViewModel}"
     d:DesignHeight="800"
     d:DesignWidth="1200"
     mc:Ignorable="d">
-    <Grid />
+    <StackPanel>
+        <TextBlock
+            Margin="25"
+            HorizontalAlignment="Center"
+            FontSize="20"
+            Text="Název turnaje - binding" />
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0">
+                <TextBlock
+                    Margin="25"
+                    HorizontalAlignment="Center"
+                    FontSize="20"
+                    Text="Část turnaje" />
+            </StackPanel>
+
+            <StackPanel Grid.Column="1">
+                <TextBlock
+                    Margin="25"
+                    HorizontalAlignment="Center"
+                    FontSize="20"
+                    Text="Zápasy" />
+            </StackPanel>
+
+            <StackPanel Grid.Column="2">
+                <TextBlock
+                    Margin="25"
+                    HorizontalAlignment="Center"
+                    FontSize="20"
+                    Text="Konkrétní zápas" />
+            </StackPanel>
+        </Grid>
+    </StackPanel>
 </UserControl>

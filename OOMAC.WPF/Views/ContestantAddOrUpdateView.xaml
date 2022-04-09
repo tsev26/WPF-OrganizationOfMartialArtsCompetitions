@@ -43,7 +43,7 @@
                 <TextBlock
                     Margin="10"
                     FontSize="20"
-                    Text="Věk" />
+                    Text="Datum naruzení" />
                 <TextBlock
                     Margin="10"
                     FontSize="20"
@@ -73,7 +73,7 @@
                     Width="300"
                     Margin="10"
                     FontSize="20"
-                    Text="{Binding Age}" />
+                    Text="{Binding DateBorn, StringFormat='dd.MM.yyyy'}" />
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto" />

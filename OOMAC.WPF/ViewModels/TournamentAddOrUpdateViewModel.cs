@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using static OOMAC.Domain.Models.Contestant;
 
 namespace OOMAC.WPF.ViewModels
 {
@@ -28,9 +29,9 @@ namespace OOMAC.WPF.ViewModels
         {
             get
             {
-                MinAge = 0;
-                MaxAge = 100;
-                MinTechnickalSkill = 0;
+                MinAge = 18;
+                MaxAge = 35;
+                MinTechnicalSkill = 1;
                 MaxTechnicalSkill = 20;
 
                 return "";
@@ -80,7 +81,7 @@ namespace OOMAC.WPF.ViewModels
         }
 
         private int _minTechnicalSkill;
-        public int MinTechnickalSkill
+        public int MinTechnicalSkill
         {
             get
             {
@@ -89,9 +90,12 @@ namespace OOMAC.WPF.ViewModels
             set
             {
                 _minTechnicalSkill = value;
-                OnPropertyChanged(nameof(MinTechnickalSkill));
+                OnPropertyChanged(nameof(MinTechnicalSkill));
+                OnPropertyChanged(nameof(MinTechnicalSkillString));
             }
         }
+
+        public string MinTechnicalSkillString => GetEnumDescription((TechnicalSkill)MinTechnicalSkill);
 
         private int _maxTechnicalSkill;
         public int MaxTechnicalSkill
@@ -104,9 +108,11 @@ namespace OOMAC.WPF.ViewModels
             {
                 _maxTechnicalSkill = value;
                 OnPropertyChanged(nameof(MaxTechnicalSkill));
+                OnPropertyChanged(nameof(MaxTechnicalSkillString));
             }
         }
 
+        public string MaxTechnicalSkillString => GetEnumDescription((TechnicalSkill)MaxTechnicalSkill);
 
         private void TournamentSelectionChange()
         {

@@ -114,7 +114,7 @@
                         Width="50"
                         Margin="10"
                         FontSize="15"
-                        Text="{Binding MinTechnickalSkill}" />
+                        Text="{Binding MinTechnicalSkillString}" />
                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
                         <Slider
                             x:Name="minTechnickalSkillSkillSlider"
@@ -122,7 +122,7 @@
                             Maximum="{Binding MaxTechnicalSkill}"
                             Minimum="1"
                             TickPlacement="BottomRight"
-                            Value="{Binding MinTechnickalSkill, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            Value="{Binding MinTechnicalSkill, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     </StackPanel>
                 </Grid>
 
@@ -136,13 +136,13 @@
                         Width="50"
                         Margin="10"
                         FontSize="15"
-                        Text="{Binding MaxTechnicalSkill}" />
+                        Text="{Binding MaxTechnicalSkillString}" />
                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
                         <Slider
                             x:Name="maxTechnicalSkillSlider"
                             IsSnapToTickEnabled="True"
                             Maximum="20"
-                            Minimum="{Binding MinTechnickalSkill}"
+                            Minimum="{Binding MinTechnicalSkill}"
                             TickPlacement="BottomRight"
                             Value="{Binding MaxTechnicalSkill, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     </StackPanel>
