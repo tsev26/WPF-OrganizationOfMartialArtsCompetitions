@@ -31,8 +31,8 @@ namespace OOMAC.Domain.Models
 
         public List<Bracket> Brackets { get; set; }
 
-        public int CountContestants => Contestans.Count;
+        public int CountContestants => Contestans?.Count ?? 0;
 
-        public bool Started => Pools.Count > 0 || Brackets.Count > 0;
+        public bool Started => Pools?.Count > 0 || Brackets?.Count > 0;
     }
 }

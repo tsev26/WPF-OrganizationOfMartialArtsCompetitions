@@ -20,13 +20,37 @@ namespace OOMAC.WPF.ViewModels
             _tournamentStore.TournamentStoreChange += TournamentStoreChange;
         }
 
+        public string Loader
+        {
+            get
+            {
+                _tournamentStore.LoadAsync();
+
+                return "";
+            }
+        }
+        
+
         public ICommand NavigateTournamentAddOrUpdateCommand { get; }
         public ICommand NavigateTournamentAddContestantsCommand { get; }
         public ICommand NavigateTournamentCommand { get; }
 
         public List<Tournament> TournamentList => _tournamentStore.Tournaments;
 
-        public Tournament SelectedTournament { get; set; }
+        private Tournament _selectedTournament;
+        public Tournament SelectedTournament
+        {
+            get
+            {
+                return _selectedTournament;
+            }
+            set
+            {
+                _selectedTournament = value;
+                OnPropertyChanged(nameof(SelectedTournament));
+                _tournamentStore.SelectedTournament = SelectedTournament;
+            }
+        }
 
         private void TournamentStoreChange()
         {

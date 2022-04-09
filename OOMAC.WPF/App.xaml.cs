@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using OOMAC.Domain.Models;
 using OOMAC.EF;
+using OOMAC.EF.Services;
 using OOMAC.WPF.Services.Navigations;
 using OOMAC.WPF.Stores;
 using OOMAC.WPF.ViewModels;
@@ -17,16 +19,22 @@ namespace OOMAC.WPF
         {
             IServiceCollection services = new ServiceCollection();
 
+            //stores
             services.AddSingleton<NavigationStore>();
             services.AddSingleton<TournamentStore>();
             services.AddSingleton<ContestantStore>();
 
 
-            //this set up first loaded ViewModel
+            //first loaded ViewModel
             services.AddSingleton<INavigationService>(s => CreateTournamentNavigationService(s));
 
+            //DB
             services.AddSingleton<OOMACDBContextFactory>();
+            services.AddSingleton<GenericDataService<Contestant>>();
+            services.AddSingleton<GenericDataService<Tournament>>();
 
+
+            //ViewModels
             services.AddSingleton<TopMenuLayerViewModel>(s => new TopMenuLayerViewModel(
                                                                     s.GetRequiredService<NavigationStore>(), 
                                                                     CreateContestantNavigationService(s), 
@@ -44,7 +52,8 @@ namespace OOMAC.WPF
             
             services.AddSingleton<TournamentAddOrUpdateViewModel>(s => new TournamentAddOrUpdateViewModel(
                                                                             s.GetRequiredService<TournamentStore>(),
-                                                                            CreateTournamentNavigationService(s)));
+                                                                            CreateTournamentNavigationService(s),
+                                                                            s.GetRequiredService<GenericDataService<Tournament>>()));
 
             services.AddSingleton<TournamentAddContestantsViewModel>(s => new TournamentAddContestantsViewModel());
             services.AddSingleton<ContestantAddOrUpdateViewModel>(s => new ContestantAddOrUpdateViewModel(
@@ -53,6 +62,8 @@ namespace OOMAC.WPF
 
 
             services.AddSingleton<MainViewModel>();
+
+
             services.AddSingleton<MainWindow>(s => new MainWindow()
             {
                 DataContext = s.GetRequiredService<MainViewModel>()

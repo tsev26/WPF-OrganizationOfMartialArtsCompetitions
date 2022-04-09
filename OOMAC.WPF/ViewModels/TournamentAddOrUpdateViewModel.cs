@@ -1,4 +1,6 @@
-﻿using OOMAC.WPF.Commands;
+﻿using OOMAC.Domain.Models;
+using OOMAC.EF.Services;
+using OOMAC.WPF.Commands;
 using OOMAC.WPF.Services.Navigations;
 using OOMAC.WPF.Stores;
 using System;
@@ -14,13 +16,15 @@ namespace OOMAC.WPF.ViewModels
     public class TournamentAddOrUpdateViewModel : ViewModelBase
     {
         private TournamentStore _tournamentStore;
-        public TournamentAddOrUpdateViewModel(TournamentStore tournamentStore, INavigationService tournamentNavigationService) 
+
+        private bool IsNewTournament => _tournamentStore.SelectedTournament == null;
+        public TournamentAddOrUpdateViewModel(TournamentStore tournamentStore, INavigationService tournamentNavigationService, GenericDataService<Tournament> tournamentService) 
         {
             _tournamentStore = tournamentStore;
 
-            CreateNewTournamentCommand = new CreateNewTournamentCommand(this, tournamentNavigationService);
+            CreateNewTournamentCommand = new CreateNewTournamentCommand(this, tournamentNavigationService, tournamentService, _tournamentStore);
 
-            _tournamentStore.TournamentSelectionChange += TournamentSelectionChange;
+            //_tournamentStore.TournamentSelectionChange += TournamentSelectionChange;
         }
 
         public ICommand CreateNewTournamentCommand { get; }
@@ -29,10 +33,12 @@ namespace OOMAC.WPF.ViewModels
         {
             get
             {
-                MinAge = 18;
-                MaxAge = 35;
-                MinTechnicalSkill = 1;
-                MaxTechnicalSkill = 20;
+                Name = _tournamentStore.SelectedTournament?.Name ?? "";
+                MinAge = _tournamentStore.SelectedTournament?.MinAge ?? 18;
+                MaxAge = _tournamentStore.SelectedTournament?.MaxAge ?? 30;
+                MinTechnicalSkillInt = (int)(_tournamentStore.SelectedTournament?.MinTechnicalSkill ?? TechnicalSkill._10kyu);
+                MaxTechnicalSkillInt = (int)(_tournamentStore.SelectedTournament?.MaxTechnicalSkill ?? TechnicalSkill._10dan);
+
 
                 return "";
             }
@@ -81,7 +87,7 @@ namespace OOMAC.WPF.ViewModels
         }
 
         private int _minTechnicalSkill;
-        public int MinTechnicalSkill
+        public int MinTechnicalSkillInt
         {
             get
             {
@@ -90,15 +96,17 @@ namespace OOMAC.WPF.ViewModels
             set
             {
                 _minTechnicalSkill = value;
+                OnPropertyChanged(nameof(MinTechnicalSkillInt));
                 OnPropertyChanged(nameof(MinTechnicalSkill));
                 OnPropertyChanged(nameof(MinTechnicalSkillString));
             }
         }
 
-        public string MinTechnicalSkillString => GetEnumDescription((TechnicalSkill)MinTechnicalSkill);
+        public TechnicalSkill MinTechnicalSkill => (TechnicalSkill)MinTechnicalSkillInt;
+        public string MinTechnicalSkillString => GetEnumDescription(MinTechnicalSkill);
 
         private int _maxTechnicalSkill;
-        public int MaxTechnicalSkill
+        public int MaxTechnicalSkillInt
         {
             get
             {
@@ -108,15 +116,27 @@ namespace OOMAC.WPF.ViewModels
             {
                 _maxTechnicalSkill = value;
                 OnPropertyChanged(nameof(MaxTechnicalSkill));
+                OnPropertyChanged(nameof(MaxTechnicalSkillInt));
                 OnPropertyChanged(nameof(MaxTechnicalSkillString));
             }
         }
 
-        public string MaxTechnicalSkillString => GetEnumDescription((TechnicalSkill)MaxTechnicalSkill);
+        public TechnicalSkill MaxTechnicalSkill => (TechnicalSkill)MaxTechnicalSkillInt;
+        public string MaxTechnicalSkillString => GetEnumDescription(MaxTechnicalSkill);
 
+        public string ButtonName => IsNewTournament ? "Vytvořit" : "Upravit";
+
+        public string TitleName => IsNewTournament ? "Nový turnaj" : "Úprava turnaje";
+
+        /*
         private void TournamentSelectionChange()
         {
-            throw new NotImplementedException();
+            Name = _tournamentStore.SelectedTournament?.Name ?? "";
+            MinAge = _tournamentStore.SelectedTournament?.MinAge ?? 18;
+            MaxAge = _tournamentStore.SelectedTournament?.MaxAge ?? 30;
+            MinTechnicalSkillInt = (int)(_tournamentStore.SelectedTournament?.MinTechnicalSkill ?? TechnicalSkill._10kyu);
+            MaxTechnicalSkillInt = (int)(_tournamentStore.SelectedTournament?.MaxTechnicalSkill ?? TechnicalSkill._10dan);
         }
+        */
     }
 }

@@ -1,14 +1,22 @@
 ﻿using OOMAC.Domain.Models;
+using OOMAC.EF.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace OOMAC.WPF.Stores
 {
     public class TournamentStore
     {
+
+        private readonly GenericDataService<Tournament> _tournamentService;
+
+        public TournamentStore(GenericDataService<Tournament> tournamentService)
+        {
+            _tournamentService = tournamentService;
+        }
+
         public event Action TournamentStoreChange;
 
         private List<Tournament> _tournaments;
@@ -27,8 +35,16 @@ namespace OOMAC.WPF.Stores
 
         public event Action TournamentSelectionChange;
 
-        private Contestant _selectedTournament;
-        public Contestant SelectedTournament
+        public async Task LoadAsync(params object[] arguments)
+        {
+            SelectedTournament = null;
+            IEnumerable<Tournament> users = await _tournamentService.GetAll();
+
+            Tournaments = users.ToList();
+        }
+
+        private Tournament _selectedTournament;
+        public Tournament SelectedTournament
         {
             get
             {
