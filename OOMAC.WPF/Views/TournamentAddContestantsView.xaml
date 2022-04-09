@@ -12,11 +12,68 @@
     d:DesignWidth="1200"
     mc:Ignorable="d">
     <StackPanel>
+
         <TextBlock
-            Margin="0,25,0,0"
+            x:Name="HiddenTextBox"
+            Width="0"
+            Height="0"
+            Text="{Binding Loader, Mode=OneTime}" />
+
+        <TextBlock
+            Margin="0,5,0,0"
             HorizontalAlignment="Center"
+            d:Text="Název turnaje"
             FontSize="20"
-            Text="Vybraný turnaj - název" />
+            Text="{Binding TitleName}" />
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="60" />
+                <ColumnDefinition Width="60" />
+                <ColumnDefinition Width="60" />
+                <ColumnDefinition Width="60" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="1"
+                Text="Min věk" />
+            <TextBlock
+                Grid.Row="1"
+                Grid.Column="1"
+                Text="{Binding MinAge}" />
+
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="2"
+                Text="Max věk" />
+            <TextBlock
+                Grid.Row="1"
+                Grid.Column="2"
+                Text="{Binding MaxAge}" />
+
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="3"
+                Text="Min tech" />
+            <TextBlock
+                Grid.Row="1"
+                Grid.Column="3"
+                Text="{Binding MinTechnicalSkill}" />
+
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="4"
+                Text="Max tech" />
+            <TextBlock
+                Grid.Row="1"
+                Grid.Column="4"
+                Text="{Binding MaxTechnicalSkill}" />
+        </Grid>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3*" />
@@ -26,13 +83,14 @@
 
             <StackPanel Grid.Column="0">
                 <TextBlock
-                    Margin="15"
+                    Margin="5"
                     HorizontalAlignment="Center"
                     FontSize="20"
                     Text="Přiřazení závodníci" />
 
                 <ListView
                     x:Name="TournamentContestantList"
+                    MaxHeight="360"
                     Margin="0,5"
                     HorizontalAlignment="Center"
                     FontSize="14"
@@ -55,7 +113,7 @@
                                 Header="Věk" />
                             <GridViewColumn
                                 Width="50"
-                                DisplayMemberBinding="{Binding TechnicallSkill}"
+                                DisplayMemberBinding="{Binding TechSkillString}"
                                 Header="Tech. úroveň" />
                         </GridView>
                     </ListView.View>
@@ -65,31 +123,36 @@
 
             <StackPanel Grid.Column="1" Margin="0,80,0,0">
                 <Button
-                    Width="80"
+                    x:Name="Add"
+                    Width="100"
                     Height="40"
-                    Margin="10"
-                    Command="{Binding CreateNewContestantCommand}"
-                    Content="Přiřadit"
+                    Margin="5"
+                    Command="{Binding AssignContestantToTournamentCommand}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                    Content="&lt; Přiřadit"
                     FontSize="20" />
 
                 <Button
-                    Width="80"
+                    x:Name="Remove"
+                    Width="100"
                     Height="40"
-                    Margin="10"
-                    Command="{Binding CreateNewContestantCommand}"
-                    Content="Odebrat"
+                    Margin="5"
+                    Command="{Binding AssignContestantToTournamentCommand}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                    Content="Odebrat &gt;"
                     FontSize="20" />
             </StackPanel>
 
             <StackPanel Grid.Column="2">
                 <TextBlock
-                    Margin="15"
+                    Margin="5"
                     HorizontalAlignment="Center"
                     FontSize="20"
                     Text="Závodníci splňující kritéria" />
 
                 <ListView
                     x:Name="ContestantList"
+                    MaxHeight="360"
                     Margin="0,5"
                     HorizontalAlignment="Center"
                     FontSize="14"
@@ -112,7 +175,7 @@
                                 Header="Věk" />
                             <GridViewColumn
                                 Width="50"
-                                DisplayMemberBinding="{Binding TechnicallSkill}"
+                                DisplayMemberBinding="{Binding TechSkillString}"
                                 Header="Tech. úroveň" />
                         </GridView>
                     </ListView.View>
