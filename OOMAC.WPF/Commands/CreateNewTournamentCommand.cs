@@ -3,19 +3,12 @@ using OOMAC.EF.Services;
 using OOMAC.WPF.Services.Navigations;
 using OOMAC.WPF.Stores;
 using OOMAC.WPF.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace OOMAC.WPF.Commands
 {
     public class CreateNewTournamentCommand : CommandBase
     {
-
-        //TODO values from contestantAddOrUpdateViewModel use to create new or update in DB
         private readonly TournamentAddOrUpdateViewModel _tournamentAddOrUpdateViewModel;
         private readonly GenericDataService<Tournament> _tournamentService;
         private readonly TournamentStore _tournamentStore;

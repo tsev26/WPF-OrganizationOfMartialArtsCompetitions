@@ -1,4 +1,6 @@
-﻿using OOMAC.WPF.Commands;
+﻿using OOMAC.Domain.Models;
+using OOMAC.EF.Services;
+using OOMAC.WPF.Commands;
 using OOMAC.WPF.Services.Navigations;
 using OOMAC.WPF.Stores;
 using System;
@@ -10,16 +12,33 @@ namespace OOMAC.WPF.ViewModels
     public class ContestantAddOrUpdateViewModel : ViewModelBase
     {
         private ContestantStore _contestantStore;
-        public ContestantAddOrUpdateViewModel(ContestantStore contestantStore, INavigationService contestantNavigationService) 
+
+        private bool IsNewContestant => _contestantStore.SelectedContestant == null;
+        public ContestantAddOrUpdateViewModel(ContestantStore contestantStore, INavigationService contestantNavigationService, GenericDataService<Contestant> contestantService) 
         {
             _contestantStore = contestantStore;
 
-            CreateNewContestantCommand = new CreateNewContestantCommand(this, contestantNavigationService);
+            CreateNewContestantCommand = new CreateNewContestantCommand(this, contestantNavigationService, contestantService, _contestantStore);
 
-            _contestantStore.ContestantSelectionChange += ContestantSelectionChange;
+            //_contestantStore.ContestantSelectionChange += ContestantSelectionChange;
         }
 
         public ICommand CreateNewContestantCommand { get; }
+
+        public string Loader
+        {
+            get
+            {
+                FirstName = _contestantStore.SelectedContestant?.FirstName ?? "";
+                LastName = _contestantStore.SelectedContestant?.LastName ?? "";
+                Email = _contestantStore.SelectedContestant?.Email ?? "";
+                DateBorn = _contestantStore.SelectedContestant?.DateBorn ?? DateTime.Parse("2000-01-01");
+                TechnickalSkillInt = (int)(_contestantStore.SelectedContestant?.TechSkill ?? TechnicalSkill._10kyu);
+
+
+                return "";
+            }
+        }
 
         private string _firstName;
         public string FirstName
@@ -77,28 +96,33 @@ namespace OOMAC.WPF.ViewModels
             }
         }
 
-        private double technicalSkillDouble;
+        private double technicalSkillInt;
 
-        public double TechnickalSkillDouble
+        public double TechnickalSkillInt
         {
             get
             {
-                return technicalSkillDouble;
+                return technicalSkillInt;
             }
             set
             {
-                technicalSkillDouble = value;
-                OnPropertyChanged(nameof(TechnickalSkillDouble));
+                technicalSkillInt = value;
+                OnPropertyChanged(nameof(TechnickalSkillInt));
                 OnPropertyChanged(nameof(TechnicalSkill));
                 OnPropertyChanged(nameof(TechnicalSkillString));
             }
         }
 
-        public TechnicalSkill TechnicalSkill => (TechnicalSkill)TechnickalSkillDouble;
+        public TechnicalSkill TechnicalSkill => (TechnicalSkill)TechnickalSkillInt;
 
 
         public string TechnicalSkillString => GetEnumDescription(TechnicalSkill);
 
+        public string ButtonName => IsNewContestant ? "Vytvořit" : "Upravit";
+
+        public string TitleName => IsNewContestant ? "Nový závodník" : "Úprava závodníka";
+
+        /*
         private void ContestantSelectionChange()
         {
             FirstName = _contestantStore.SelectedContestant.FirstName;
@@ -107,7 +131,7 @@ namespace OOMAC.WPF.ViewModels
             DateBorn = _contestantStore.SelectedContestant.DateBorn;
             TechnickalSkillDouble = (double)_contestantStore.SelectedContestant.TechSkill;
         }
-
+        */
 
     }
 }

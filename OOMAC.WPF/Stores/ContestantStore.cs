@@ -1,4 +1,5 @@
 ﻿using OOMAC.Domain.Models;
+using OOMAC.EF.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,12 @@ namespace OOMAC.WPF.Stores
 {
     public class ContestantStore
     {
+        private readonly GenericDataService<Contestant> _contestantService;
+
+        public ContestantStore(GenericDataService<Contestant> contestantService)
+        {
+            _contestantService = contestantService;
+        }
         public event Action ContestantStoreChange;
 
         private List<Contestant> _contestants;
@@ -26,6 +33,14 @@ namespace OOMAC.WPF.Stores
         }
 
         public event Action ContestantSelectionChange;
+
+        public async Task LoadAsync(params object[] arguments)
+        {
+            SelectedContestant = null;
+            IEnumerable<Contestant> users = await _contestantService.GetAll();
+
+            Contestants = users.ToList();
+        }
 
         private Contestant _selectedContestant;
         public Contestant SelectedContestant

@@ -8,6 +8,7 @@ namespace OOMAC.WPF.ViewModels
 {
     public class TournamentAddContestantsViewModel : ViewModelBase
     {
+
         public TournamentAddContestantsViewModel() { }
     }
 }

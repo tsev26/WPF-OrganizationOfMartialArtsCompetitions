@@ -12,11 +12,18 @@
     d:DesignWidth="1200"
     mc:Ignorable="d">
     <StackPanel HorizontalAlignment="Center">
+
+        <TextBlock
+            x:Name="HiddenTextBox"
+            Width="0"
+            Height="0"
+            Text="{Binding Loader, Mode=OneTime}" />
+
         <TextBlock
             Margin="25"
             HorizontalAlignment="Center"
             FontSize="20"
-            Text="Nový závodník" />
+            Text="{Binding TitleName}" />
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -64,12 +71,25 @@
                     Margin="10"
                     FontSize="20"
                     Text="{Binding Email}" />
-                <TextBox
-                    x:Name="Age"
+
+                <DatePicker
                     Width="300"
                     Margin="10"
                     FontSize="20"
-                    Text="{Binding DateBorn, StringFormat='dd.MM.yyyy'}" />
+                    SelectedDate="{Binding DateBorn, StringFormat='{}{0:dd.MM.yyyy}'}" />
+
+                <!--
+                <TextBox
+                    x:Name="DateBorn"
+                    Width="300"
+                    Margin="10"
+                    FontSize="20"
+                    >
+                    <TextBox.Text>
+                        <Binding Path="DateBorn" StringFormat='{}{0:dd.MM.yyyy}' />
+                    </TextBox.Text>
+                </TextBox>
+                -->
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto" />
@@ -89,7 +109,7 @@
                             Maximum="20"
                             Minimum="1"
                             TickPlacement="BottomRight"
-                            Value="{Binding TechnickalSkillDouble, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            Value="{Binding TechnickalSkillInt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     </StackPanel>
 
                 </Grid>
@@ -103,7 +123,7 @@
             Height="40"
             Margin="25"
             Command="{Binding CreateNewContestantCommand}"
-            Content="Vytvořit"
+            Content="{Binding ButtonName}"
             FontSize="20" />
 
     </StackPanel>

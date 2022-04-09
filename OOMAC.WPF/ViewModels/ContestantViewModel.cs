@@ -19,11 +19,35 @@ namespace OOMAC.WPF.ViewModels
             _contestantStore.ContestantStoreChange += ContestantStoreChange;
         }
 
+
+        public string Loader
+        {
+            get
+            {
+                _contestantStore.LoadAsync();
+
+                return "";
+            }
+        }
+
         public ICommand NavigateContestantAddOrUpdateCommand { get; }
 
         public List<Contestant> ContestantList => _contestantStore.Contestants;
 
-        public Contestant SelectedContestant { get; set; }
+        private Contestant _selectedContestant;
+        public Contestant SelectedContestant
+        {
+            get
+            {
+                return _selectedContestant;
+            }
+            set
+            {
+                _selectedContestant = value;
+                OnPropertyChanged(nameof(SelectedContestant));
+                _contestantStore.SelectedContestant = SelectedContestant;
+            }
+        }
 
         private void ContestantStoreChange()
         {

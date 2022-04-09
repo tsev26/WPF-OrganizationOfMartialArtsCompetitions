@@ -12,12 +12,20 @@
     d:DesignWidth="1200"
     mc:Ignorable="d">
     <StackPanel HorizontalAlignment="Center">
+
+        <TextBlock
+            x:Name="HiddenTextBox"
+            Width="0"
+            Height="0"
+            Text="{Binding Loader, Mode=OneTime}" />
+
         <Button
             Width="350"
             Height="50"
             Margin="25"
             Command="{Binding NavigateContestantAddOrUpdateCommand}"
             Content="Přidat nového závodníka"
+            Click="Button_Click"
             FontSize="25" />
 
         <TextBlock
@@ -31,6 +39,7 @@
             Margin="0,5"
             HorizontalAlignment="Center"
             FontSize="14"
+            MaxHeight="300"
             ItemsSource="{Binding ContestantList}"
             SelectedItem="{Binding SelectedContestant, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             SelectionMode="Single">
@@ -50,7 +59,7 @@
                         Header="Věk" />
                     <GridViewColumn
                         Width="70"
-                        DisplayMemberBinding="{Binding TechnicalSkill}"
+                        DisplayMemberBinding="{Binding TechSkillString}"
                         Header="Tech. lvl" />
                 </GridView>
             </ListView.View>
