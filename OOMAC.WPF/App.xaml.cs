@@ -47,7 +47,9 @@ namespace OOMAC.WPF
             services.AddSingleton<TournamentListViewModel>(s => new TournamentListViewModel(
                                                                         s.GetRequiredService<TournamentStore>(),
                                                                         CreateTournamentAddOrUpdateNavigationService(s),
-                                                                        CreateTournamentAddContestantsNavigationService(s)));
+                                                                        CreateTournamentAddContestantsNavigationService(s),
+                                                                        CreateTournamentDetailNavigationService(s),
+                                                                        s.GetRequiredService<TournamentDataService>()));
             
             services.AddSingleton<TournamentAddOrUpdateViewModel>(s => new TournamentAddOrUpdateViewModel(
                                                                             s.GetRequiredService<TournamentStore>(),
@@ -63,6 +65,7 @@ namespace OOMAC.WPF
                                                                                 CreateContestantNavigationService(s),
                                                                                 s.GetRequiredService<ContestantDataService>()));
 
+            services.AddSingleton<TournamentSelectedViewModel>();
 
             services.AddSingleton<MainViewModel>();
 
@@ -121,6 +124,11 @@ namespace OOMAC.WPF
         private INavigationService CreateContestantAddOrUpdateNavigationService(IServiceProvider serviceProvider)
         {
             return CreateNavigationService<ContestantAddOrUpdateViewModel>("Vytvoření / úprava závodníka", serviceProvider);
+        }
+
+        private INavigationService CreateTournamentDetailNavigationService(IServiceProvider serviceProvider)
+        {
+            return CreateNavigationService<TournamentSelectedViewModel>("Detail turnaje", serviceProvider);
         }
 
     }

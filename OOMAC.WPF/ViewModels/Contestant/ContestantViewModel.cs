@@ -45,9 +45,12 @@ namespace OOMAC.WPF.ViewModels
             {
                 _selectedContestant = value;
                 OnPropertyChanged(nameof(SelectedContestant));
+                OnPropertyChanged(nameof(IsContestantSelected));
                 _contestantStore.SelectedContestant = SelectedContestant;
             }
         }
+
+        public bool IsContestantSelected => SelectedContestant != null;
 
         private void ContestantStoreChange()
         {

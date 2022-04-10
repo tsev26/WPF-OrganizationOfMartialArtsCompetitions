@@ -11,6 +11,9 @@
     d:DesignHeight="800"
     d:DesignWidth="1200"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
     <StackPanel HorizontalAlignment="Center">
 
         <TextBlock
@@ -23,9 +26,9 @@
             Width="350"
             Height="50"
             Margin="25"
+            Click="Button_Click"
             Command="{Binding NavigateContestantAddOrUpdateCommand}"
             Content="Přidat nového závodníka"
-            Click="Button_Click"
             FontSize="25" />
 
         <TextBlock
@@ -36,10 +39,10 @@
 
         <ListView
             x:Name="ContestantList"
+            MaxHeight="300"
             Margin="0,5"
             HorizontalAlignment="Center"
             FontSize="14"
-            MaxHeight="300"
             ItemsSource="{Binding ContestantList}"
             SelectedItem="{Binding SelectedContestant, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             SelectionMode="Single">
@@ -78,7 +81,8 @@
                 Margin="5"
                 Command="{Binding NavigateContestantAddOrUpdateCommand}"
                 Content="Upravit"
-                FontSize="20" />
+                FontSize="20"
+                Visibility="{Binding IsContestantSelected, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
             <!--
             <Button

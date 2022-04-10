@@ -37,7 +37,6 @@ namespace OOMAC.WPF.Commands
             newTournament.Name = _tournamentAddOrUpdateViewModel.Name;
             newTournament.Brackets = new List<Bracket>();
             newTournament.Contestans = new List<Contestant>();
-            newTournament.Pools = new List<Pool>();
 
 
             if (_tournamentStore.SelectedTournament != null)

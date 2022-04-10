@@ -11,6 +11,9 @@
     d:DesignHeight="600"
     d:DesignWidth="800"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
     <StackPanel HorizontalAlignment="Center">
 
         <TextBlock
@@ -23,9 +26,9 @@
             Width="350"
             Height="50"
             Margin="25"
+            Click="Button_Click"
             Command="{Binding NavigateTournamentAddOrUpdateCommand}"
             Content="Vytvořit nový turnaj"
-            Click="Button_Click"
             FontSize="25" />
 
 
@@ -36,10 +39,10 @@
 
         <ListView
             x:Name="TournamentList"
+            MaxHeight="400"
             Margin="0,5"
             HorizontalAlignment="Center"
             FontSize="14"
-            MaxHeight="400"
             ItemsSource="{Binding TournamentList}"
             SelectedItem="{Binding SelectedTournament, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             SelectionMode="Single">
@@ -84,16 +87,29 @@
                 Margin="5"
                 Command="{Binding NavigateTournamentAddOrUpdateCommand}"
                 Content="Upravit"
-                FontSize="20" />
+                FontSize="20"
+                Visibility="{Binding IsTurnamentNotStarted, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
             <Button
                 Grid.Column="1"
                 Width="125"
                 Height="30"
                 Margin="5"
-                Command="{Binding NavigateTournamentAddContestantsCommand}"
+                Command="{Binding StartTournamentCommand}"
                 Content="Spustit"
-                FontSize="20" />
+                FontSize="20"
+                Visibility="{Binding IsTurnamentNotStarted, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+
+            <Button
+                Grid.Column="1"
+                Width="125"
+                Height="30"
+                Margin="5"
+                Command="{Binding NavigateTournamentSelectedCommand}"
+                Content="Detail"
+                FontSize="20"
+                Visibility="{Binding IsTurnamentStarted, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
             <Button
                 Grid.Column="2"
@@ -102,7 +118,8 @@
                 Margin="5"
                 Command="{Binding NavigateTournamentAddContestantsCommand}"
                 Content="Závodníci"
-                FontSize="20" />
+                FontSize="20"
+                Visibility="{Binding IsTurnamentNotStarted, Converter={StaticResource BooleanToVisibilityConverter}}" />
         </Grid>
     </StackPanel>
 </UserControl>

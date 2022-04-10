@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OOMAC.EF;
 
 namespace OOMAC.EF.Migrations
 {
     [DbContext(typeof(OOMACDBContext))]
-    partial class OOMACDBContextModelSnapshot : ModelSnapshot
+    [Migration("20220410152405_PoolsMergeIntoBrackets")]
+    partial class PoolsMergeIntoBrackets
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,10 +44,6 @@ namespace OOMAC.EF.Migrations
                         .HasColumnName("BrcId")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Group")
-                        .HasColumnType("int")
-                        .HasColumnName("BrcGroup");
-
                     b.Property<int>("Round")
                         .HasColumnType("int")
                         .HasColumnName("BrcRound");
@@ -54,11 +52,15 @@ namespace OOMAC.EF.Migrations
                         .HasColumnType("int")
                         .HasColumnName("BrcTrnId");
 
+                    b.Property<int>("Type")
+                        .HasColumnType("int")
+                        .HasColumnName("BrcType");
+
                     b.HasKey("Id");
 
                     b.HasIndex("TournamentId");
 
-                    b.ToTable("Bracket");
+                    b.ToTable("Bracker");
                 });
 
             modelBuilder.Entity("OOMAC.Domain.Models.Contestant", b =>
@@ -102,14 +104,23 @@ namespace OOMAC.EF.Migrations
                         .HasColumnName("MatId")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("BracketId")
-                        .HasColumnType("int");
+                    b.Property<int>("BracketId")
+                        .HasColumnType("int")
+                        .HasColumnName("MatBrcIdId");
 
                     b.Property<int?>("ContestantAId")
                         .HasColumnType("int");
 
                     b.Property<int?>("ContestantBId")
                         .HasColumnType("int");
+
+                    b.Property<int>("ContestantIdA")
+                        .HasColumnType("int")
+                        .HasColumnName("MatConIdAId");
+
+                    b.Property<int>("ContestantIdB")
+                        .HasColumnType("int")
+                        .HasColumnName("MatConIdBId");
 
                     b.Property<string>("ScoreContestantAString")
                         .HasColumnType("nvarchar(max)")
@@ -193,7 +204,9 @@ namespace OOMAC.EF.Migrations
                 {
                     b.HasOne("OOMAC.Domain.Models.Bracket", "Bracket")
                         .WithMany("Matches")
-                        .HasForeignKey("BracketId");
+                        .HasForeignKey("BracketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("OOMAC.Domain.Models.Contestant", "ContestantA")
                         .WithMany()

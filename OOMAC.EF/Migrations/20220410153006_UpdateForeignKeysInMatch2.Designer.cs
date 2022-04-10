@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OOMAC.EF;
 
 namespace OOMAC.EF.Migrations
 {
     [DbContext(typeof(OOMACDBContext))]
-    partial class OOMACDBContextModelSnapshot : ModelSnapshot
+    [Migration("20220410153006_UpdateForeignKeysInMatch2")]
+    partial class UpdateForeignKeysInMatch2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,10 +44,6 @@ namespace OOMAC.EF.Migrations
                         .HasColumnName("BrcId")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Group")
-                        .HasColumnType("int")
-                        .HasColumnName("BrcGroup");
-
                     b.Property<int>("Round")
                         .HasColumnType("int")
                         .HasColumnName("BrcRound");
@@ -53,6 +51,10 @@ namespace OOMAC.EF.Migrations
                     b.Property<int>("TournamentId")
                         .HasColumnType("int")
                         .HasColumnName("BrcTrnId");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int")
+                        .HasColumnName("BrcType");
 
                     b.HasKey("Id");
 

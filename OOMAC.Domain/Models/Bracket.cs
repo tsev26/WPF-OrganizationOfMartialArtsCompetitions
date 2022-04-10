@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OOMAC.Domain.Models
 {
-    [Table("Bracker")]
+    [Table("Bracket")]
     public class Bracket : DomainObject
     {
         [Column("BrcId")]
@@ -12,11 +12,14 @@ namespace OOMAC.Domain.Models
         [Column("BrcTrnId")]
         public int TournamentId { get; set; }
 
-        public Tournament Tournament { get; set; }
+        [Column("BrcGroup")]
+        public int Group { get; set; }
 
+        [Column("BrcRound")]
         public int Round { get; set; }
 
-        public List<Match> Matches { get; set; }
+        public Tournament Tournament { get; set; }
 
+        public List<Match> Matches { get; set; }
     }
 }
