@@ -41,7 +41,6 @@ namespace OOMAC.WPF
                                                                     CreateContestantNavigationService(s), 
                                                                     CreateTournamentNavigationService(s)));
             
-            services.AddSingleton<HomeViewModel>(s => new HomeViewModel());
             services.AddSingleton<ContestantViewModel>(s => new ContestantViewModel(
                                                                     s.GetRequiredService<ContestantStore>(),
                                                                     CreateContestantAddOrUpdateNavigationService(s)));

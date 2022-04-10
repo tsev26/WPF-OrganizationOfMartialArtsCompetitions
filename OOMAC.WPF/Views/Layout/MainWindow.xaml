@@ -15,9 +15,6 @@
     mc:Ignorable="d">
     <Grid>
         <Grid.Resources>
-            <DataTemplate DataType="{x:Type viewmodels:HomeViewModel}">
-                <views:HomeView />
-            </DataTemplate>
             <DataTemplate DataType="{x:Type viewmodels:ContestantViewModel}">
                 <views:ContestantView />
             </DataTemplate>
