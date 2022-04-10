@@ -24,7 +24,7 @@ namespace OOMAC.WPF.ViewModels
         {
             get
             {
-                _contestantStore.LoadAsync();
+                _ = _contestantStore.LoadAsync();
 
                 return "";
             }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using OOMAC.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -11,47 +12,47 @@ namespace OOMAC.EF.Services
     public class GenericDataService<T> where T : DomainObject
     {
         private readonly OOMACDBContextFactory _contextFactory;
-        private readonly NonQueryDataService<T> _nonQueryDataService;
 
         public GenericDataService(OOMACDBContextFactory contextFactory)
         {
-            _contextFactory = contextFactory;
-            _nonQueryDataService = new NonQueryDataService<T>(contextFactory);
-        }
 
+            _contextFactory = contextFactory;
+        }
 
         public async Task<T> Create(T entity)
         {
-            return await _nonQueryDataService.Create(entity);
-        }
-
-        public async Task<bool> Delete(int id)
-        {
-            return await _nonQueryDataService.Delete(id);
-        }
-
-        public async Task<T> Get(int id)
-        {
-
             using (OOMACDBContext context = _contextFactory.CreateDbContext())
             {
-                T entity = await context.Set<T>().FirstOrDefaultAsync((e) => e.Id == id);
-                return entity;
-            }
-        }
+                EntityEntry<T> createdResult = await context.Set<T>().AddAsync(entity);
+                await context.SaveChangesAsync();
 
-        public async Task<IEnumerable<T>> GetAll()
-        {
-            using (OOMACDBContext context = _contextFactory.CreateDbContext())
-            {
-                IEnumerable<T> entities = await context.Set<T>().ToListAsync();
-                return entities;
+                return createdResult.Entity;
             }
         }
 
         public async Task<T> Update(int id, T entity)
         {
-            return await _nonQueryDataService.Update(id, entity);
+            using (OOMACDBContext context = _contextFactory.CreateDbContext())
+            {
+                entity.Id = id;
+
+                context.Set<T>().Update(entity);
+                await context.SaveChangesAsync();
+
+                return entity;
+            }
+        }
+
+        public async Task<bool> Delete(int id)
+        {
+            using (OOMACDBContext context = _contextFactory.CreateDbContext())
+            {
+                T entity = await context.Set<T>().FirstOrDefaultAsync((e) => e.Id == id);
+                context.Set<T>().Remove(entity);
+                await context.SaveChangesAsync();
+
+                return true;
+            }
         }
     }
 }

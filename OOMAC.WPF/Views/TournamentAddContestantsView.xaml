@@ -94,7 +94,7 @@
                     Margin="0,5"
                     HorizontalAlignment="Center"
                     FontSize="14"
-                    ItemsSource="{Binding TournamentContestantList}"
+                    ItemsSource="{Binding TournamentContestantList, UpdateSourceTrigger=PropertyChanged}"
                     SelectedItem="{Binding SelectedContestantTournament, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     SelectionMode="Single">
                     <ListView.View>
@@ -156,7 +156,7 @@
                     Margin="0,5"
                     HorizontalAlignment="Center"
                     FontSize="14"
-                    ItemsSource="{Binding ContestantList}"
+                    ItemsSource="{Binding ContestantList, UpdateSourceTrigger=PropertyChanged}"
                     SelectedItem="{Binding SelectedContestant, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     SelectionMode="Single">
                     <ListView.View>

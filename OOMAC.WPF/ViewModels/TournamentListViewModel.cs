@@ -24,7 +24,8 @@ namespace OOMAC.WPF.ViewModels
         {
             get
             {
-                _tournamentStore.LoadAsync();
+                _ = _tournamentStore.LoadAsync();
+                _tournamentStore.Unselect();
 
                 return "";
             }

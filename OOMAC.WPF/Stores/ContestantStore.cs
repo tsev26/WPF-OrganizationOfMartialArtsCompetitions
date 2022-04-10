@@ -10,9 +10,9 @@ namespace OOMAC.WPF.Stores
 {
     public class ContestantStore
     {
-        private readonly GenericDataService<Contestant> _contestantService;
+        private readonly ContestantDataService _contestantService;
 
-        public ContestantStore(GenericDataService<Contestant> contestantService)
+        public ContestantStore(ContestantDataService contestantService)
         {
             _contestantService = contestantService;
         }

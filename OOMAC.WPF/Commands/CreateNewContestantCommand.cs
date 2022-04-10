@@ -11,12 +11,12 @@ namespace OOMAC.WPF.Commands
     {
 
         private readonly ContestantAddOrUpdateViewModel _contestantAddOrUpdateViewModel;
-        private readonly GenericDataService<Contestant> _contestantService;
+        private readonly ContestantDataService _contestantService;
         private readonly ContestantStore _contestantStore;
         public ICommand NavigateContestantCommand { get; }
         public CreateNewContestantCommand(ContestantAddOrUpdateViewModel contestantAddOrUpdateViewModel, 
                                           INavigationService contestantNavigationService,
-                                          GenericDataService<Contestant> contestantService,
+                                          ContestantDataService contestantService,
                                           ContestantStore contestantStore)
         {
             _contestantAddOrUpdateViewModel = contestantAddOrUpdateViewModel;

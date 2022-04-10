@@ -1,7 +1,10 @@
 ﻿using OOMAC.Domain.Models;
+using OOMAC.EF.Services;
+using OOMAC.WPF.Commands;
 using OOMAC.WPF.Stores;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using static OOMAC.Domain.Models.Contestant;
 
@@ -12,16 +15,33 @@ namespace OOMAC.WPF.ViewModels
         private ContestantStore _contestantStore;
         private TournamentStore _tournamentStore;
 
-        public TournamentAddContestantsViewModel(TournamentStore tournamentStore, ContestantStore contestantStore) 
+        public TournamentAddContestantsViewModel(TournamentStore tournamentStore, ContestantStore contestantStore, TournamentDataService tournamentDataService) 
         {
             _tournamentStore = tournamentStore;
             _contestantStore = contestantStore;
+
+            _contestantStore.ContestantStoreChange += ContestantStoreChange;
+            _tournamentStore.TournamentSelectionChange += TournamentSelectionChange;
+
+            AssignContestantToTournamentCommand = new AssignContestantToTournamentCommand(this, tournamentDataService);
+        }
+
+        private void TournamentSelectionChange()
+        {
+            OnPropertyChanged(nameof(TournamentContestantList));
+            OnPropertyChanged(nameof(ContestantList));
+        }
+
+        private void ContestantStoreChange()
+        {
+            OnPropertyChanged(nameof(ContestantList));
         }
 
         public string Loader
         {
             get
             {
+                _ = _contestantStore.LoadAsync();
                 if (_tournamentStore.SelectedTournament.Contestans == null)
                 {
                     _tournamentStore.SelectedTournament.Contestans = new List<Contestant>();
@@ -31,9 +51,14 @@ namespace OOMAC.WPF.ViewModels
             }
         }
 
+        public async Task updateViewChange()
+        {
+            await _tournamentStore.UpdateSelectedAsync(SelectedTournament.Id);
+        }
+
         public ICommand AssignContestantToTournamentCommand { get; }
 
-        public List<Contestant> TournamentContestantList => _tournamentStore.SelectedTournament.Contestans.ToList();
+        public List<Contestant> TournamentContestantList => _tournamentStore.SelectedTournament.Contestans;
 
         private Contestant _selectedContestantTournament;
         public Contestant SelectedContestantTournament
@@ -50,12 +75,13 @@ namespace OOMAC.WPF.ViewModels
         }
 
         public List<Contestant> ContestantList => _contestantStore.Contestants
-                                                                   .Except(TournamentContestantList)
                                                                    .Where(s =>
                                                                           s.Age >= _tournamentStore.SelectedTournament.MinAge &&
                                                                           s.Age <= _tournamentStore.SelectedTournament.MaxAge &&
                                                                           s.TechSkill >= _tournamentStore.SelectedTournament.MinTechnicalSkill &&
-                                                                          s.TechSkill <= _tournamentStore.SelectedTournament.MaxTechnicalSkill)
+                                                                          s.TechSkill <= _tournamentStore.SelectedTournament.MaxTechnicalSkill &&
+                                                                          !TournamentContestantList.Any(p2 => p2.Id == s.Id))
+                                                                   //.Except(_tournamentStore.SelectedTournament.Contestans)
                                                                    .ToList();
 
         private Contestant _selectedContestant;
@@ -72,11 +98,12 @@ namespace OOMAC.WPF.ViewModels
             }
         }
 
-        public string TitleName => _tournamentStore.SelectedTournament.Name;
 
-        public int MinAge => _tournamentStore.SelectedTournament.MinAge;
-        public int MaxAge => _tournamentStore.SelectedTournament.MaxAge;
-        public string MinTechnicalSkill => GetEnumDescription(_tournamentStore.SelectedTournament.MaxTechnicalSkill);
-        public string MaxTechnicalSkill => GetEnumDescription(_tournamentStore.SelectedTournament.MinTechnicalSkill);
+        public Tournament SelectedTournament => _tournamentStore.SelectedTournament;
+        public string TitleName => SelectedTournament.Name;
+        public int MinAge => SelectedTournament.MinAge;
+        public int MaxAge => SelectedTournament.MaxAge;
+        public string MinTechnicalSkill => GetEnumDescription(SelectedTournament.MaxTechnicalSkill);
+        public string MaxTechnicalSkill => GetEnumDescription(SelectedTournament.MinTechnicalSkill);
     }
 }

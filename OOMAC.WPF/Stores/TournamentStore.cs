@@ -10,9 +10,9 @@ namespace OOMAC.WPF.Stores
     public class TournamentStore
     {
 
-        private readonly GenericDataService<Tournament> _tournamentService;
+        private readonly TournamentDataService _tournamentService;
 
-        public TournamentStore(GenericDataService<Tournament> tournamentService)
+        public TournamentStore(TournamentDataService tournamentService)
         {
             _tournamentService = tournamentService;
         }
@@ -37,10 +37,20 @@ namespace OOMAC.WPF.Stores
 
         public async Task LoadAsync(params object[] arguments)
         {
-            SelectedTournament = null;
             IEnumerable<Tournament> users = await _tournamentService.GetAll();
 
             Tournaments = users.ToList();
+        }
+
+        public async Task UpdateSelectedAsync(int tournamentId)
+        {
+            Tournament selectedTournament = await _tournamentService.Get(tournamentId);
+            SelectedTournament = selectedTournament;
+        }
+
+        public void Unselect()
+        {
+            SelectedTournament = null;
         }
 
         private Tournament _selectedTournament;
@@ -56,5 +66,6 @@ namespace OOMAC.WPF.Stores
                 TournamentSelectionChange?.Invoke();
             }
         }
+
     }
 }

@@ -29,9 +29,10 @@ namespace OOMAC.WPF
             services.AddSingleton<INavigationService>(s => CreateTournamentNavigationService(s));
 
             //DB
-            services.AddSingleton<OOMACDBContextFactory>();
-            services.AddSingleton<GenericDataService<Contestant>>();
-            services.AddSingleton<GenericDataService<Tournament>>();
+            services.AddScoped<OOMACDBContextFactory>();
+            services.AddSingleton<TournamentDataService>();
+            services.AddSingleton<ContestantDataService>(); 
+
 
 
             //ViewModels
@@ -53,15 +54,16 @@ namespace OOMAC.WPF
             services.AddSingleton<TournamentAddOrUpdateViewModel>(s => new TournamentAddOrUpdateViewModel(
                                                                             s.GetRequiredService<TournamentStore>(),
                                                                             CreateTournamentNavigationService(s),
-                                                                            s.GetRequiredService<GenericDataService<Tournament>>()));
+                                                                            s.GetRequiredService<TournamentDataService>()));
 
             services.AddSingleton<TournamentAddContestantsViewModel>(s => new TournamentAddContestantsViewModel(
                                                                               s.GetRequiredService<TournamentStore>(),
-                                                                              s.GetRequiredService<ContestantStore>()));
+                                                                              s.GetRequiredService<ContestantStore>(),
+                                                                              s.GetRequiredService<TournamentDataService>()));
             services.AddSingleton<ContestantAddOrUpdateViewModel>(s => new ContestantAddOrUpdateViewModel(
                                                                                 s.GetRequiredService<ContestantStore>(),
                                                                                 CreateContestantNavigationService(s),
-                                                                                s.GetRequiredService<GenericDataService<Contestant>>()));
+                                                                                s.GetRequiredService<ContestantDataService>()));
 
 
             services.AddSingleton<MainViewModel>();

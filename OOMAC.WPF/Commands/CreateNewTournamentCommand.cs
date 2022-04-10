@@ -3,6 +3,7 @@ using OOMAC.EF.Services;
 using OOMAC.WPF.Services.Navigations;
 using OOMAC.WPF.Stores;
 using OOMAC.WPF.ViewModels;
+using System.Collections.Generic;
 using System.Windows.Input;
 
 namespace OOMAC.WPF.Commands
@@ -10,13 +11,13 @@ namespace OOMAC.WPF.Commands
     public class CreateNewTournamentCommand : CommandBase
     {
         private readonly TournamentAddOrUpdateViewModel _tournamentAddOrUpdateViewModel;
-        private readonly GenericDataService<Tournament> _tournamentService;
+        private readonly TournamentDataService _tournamentService;
         private readonly TournamentStore _tournamentStore;
 
         public ICommand NavigateTournamentCommand { get; }
         public CreateNewTournamentCommand(TournamentAddOrUpdateViewModel tournamentAddOrUpdateViewModel, 
-                                          INavigationService tournamentNavigationService, 
-                                          GenericDataService<Tournament> tournamentService,
+                                          INavigationService tournamentNavigationService,
+                                          TournamentDataService tournamentService,
                                           TournamentStore tournamentStore)
         {
             _tournamentAddOrUpdateViewModel = tournamentAddOrUpdateViewModel;
@@ -34,6 +35,9 @@ namespace OOMAC.WPF.Commands
             newTournament.MinTechnicalSkill = _tournamentAddOrUpdateViewModel.MinTechnicalSkill;
             newTournament.MaxTechnicalSkill = _tournamentAddOrUpdateViewModel.MaxTechnicalSkill;
             newTournament.Name = _tournamentAddOrUpdateViewModel.Name;
+            newTournament.Brackets = new List<Bracket>();
+            newTournament.Contestans = new List<Contestant>();
+            newTournament.Pools = new List<Pool>();
 
 
             if (_tournamentStore.SelectedTournament != null)

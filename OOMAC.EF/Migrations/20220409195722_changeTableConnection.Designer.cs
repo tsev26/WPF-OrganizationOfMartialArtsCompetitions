@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OOMAC.EF;
 
 namespace OOMAC.EF.Migrations
 {
     [DbContext(typeof(OOMACDBContext))]
-    partial class OOMACDBContextModelSnapshot : ModelSnapshot
+    [Migration("20220409195722_changeTableConnection")]
+    partial class changeTableConnection
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

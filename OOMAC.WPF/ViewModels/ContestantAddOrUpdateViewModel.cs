@@ -13,7 +13,7 @@ namespace OOMAC.WPF.ViewModels
     {
         private ContestantStore _contestantStore;
         private bool IsNewContestant => _contestantStore.SelectedContestant == null;
-        public ContestantAddOrUpdateViewModel(ContestantStore contestantStore, INavigationService contestantNavigationService, GenericDataService<Contestant> contestantService) 
+        public ContestantAddOrUpdateViewModel(ContestantStore contestantStore, INavigationService contestantNavigationService, ContestantDataService contestantService) 
         {
             _contestantStore = contestantStore;
 

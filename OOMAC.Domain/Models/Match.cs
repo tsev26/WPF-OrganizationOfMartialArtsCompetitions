@@ -15,9 +15,9 @@ namespace OOMAC.Domain.Models
 
         public List<MatchupEntry> Entries { get; set; }
 
-        public List<Pool> Pools { get; set; }
+        public Pool Pools { get; set; }
 
-        public List<Bracket> Brackets { get; set; }
+        public Bracket Brackets { get; set; }
 
     }
 }

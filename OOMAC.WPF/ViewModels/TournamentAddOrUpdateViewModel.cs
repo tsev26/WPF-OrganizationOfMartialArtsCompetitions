@@ -18,7 +18,7 @@ namespace OOMAC.WPF.ViewModels
         private TournamentStore _tournamentStore;
 
         private bool IsNewTournament => _tournamentStore.SelectedTournament == null;
-        public TournamentAddOrUpdateViewModel(TournamentStore tournamentStore, INavigationService tournamentNavigationService, GenericDataService<Tournament> tournamentService) 
+        public TournamentAddOrUpdateViewModel(TournamentStore tournamentStore, INavigationService tournamentNavigationService, TournamentDataService tournamentService) 
         {
             _tournamentStore = tournamentStore;
 
