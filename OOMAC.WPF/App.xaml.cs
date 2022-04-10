@@ -29,7 +29,7 @@ namespace OOMAC.WPF
             services.AddSingleton<INavigationService>(s => CreateTournamentNavigationService(s));
 
             //DB
-            services.AddScoped<OOMACDBContextFactory>();
+            services.AddSingleton<OOMACDBContextFactory>();
             services.AddSingleton<TournamentDataService>();
             services.AddSingleton<ContestantDataService>(); 
 
@@ -41,7 +41,6 @@ namespace OOMAC.WPF
                                                                     CreateContestantNavigationService(s), 
                                                                     CreateTournamentNavigationService(s)));
             
-
             services.AddSingleton<HomeViewModel>(s => new HomeViewModel());
             services.AddSingleton<ContestantViewModel>(s => new ContestantViewModel(
                                                                     s.GetRequiredService<ContestantStore>(),
@@ -91,65 +90,39 @@ namespace OOMAC.WPF
         }
 
 
-        // TODO: Add private function for all navigation to all viewModels
+        private INavigationService CreateNavigationService<TViewModel>(string name, IServiceProvider serviceProvider) where TViewModel : ViewModelBase
+        {
+            return new NavigationService<TViewModel> (
+                serviceProvider.GetRequiredService<NavigationStore>(),
+                () => serviceProvider.GetRequiredService<TViewModel>(),
+                name);
+        }
 
         private INavigationService CreateContestantNavigationService(IServiceProvider serviceProvider)
         {
-            string name = "Závodníci";
-            return new NavigationService<ContestantViewModel>(
-                serviceProvider.GetRequiredService<NavigationStore>(),
-                () => serviceProvider.GetRequiredService<ContestantViewModel>(),
-                name);
+            return CreateNavigationService<ContestantViewModel>("Závodníci", serviceProvider);
         }
 
 
         private INavigationService CreateTournamentNavigationService(IServiceProvider serviceProvider)
         {
-            string name = "Turnaje";
-            return new NavigationService<TournamentListViewModel>(
-                serviceProvider.GetRequiredService<NavigationStore>(),
-                () => serviceProvider.GetRequiredService<TournamentListViewModel>(),
-                name);
+            return CreateNavigationService<TournamentListViewModel>("Turnaje", serviceProvider);
         }
 
         private INavigationService CreateTournamentAddContestantsNavigationService(IServiceProvider serviceProvider)
         {
-            string name = "Přidání závodníků do turnaje";
-            return new NavigationService<TournamentAddContestantsViewModel>(
-                serviceProvider.GetRequiredService<NavigationStore>(),
-                () => serviceProvider.GetRequiredService<TournamentAddContestantsViewModel>(),
-                name);
+            return CreateNavigationService<TournamentAddContestantsViewModel>("Přidání závodníků do turnaje", serviceProvider);
         }
 
         private INavigationService CreateTournamentAddOrUpdateNavigationService(IServiceProvider serviceProvider)
         {
-            string name = "Vytvoření / úprava turnaje";
-            return new NavigationService<TournamentAddOrUpdateViewModel>(
-                serviceProvider.GetRequiredService<NavigationStore>(),
-                () => serviceProvider.GetRequiredService<TournamentAddOrUpdateViewModel>(),
-                name);
+            return CreateNavigationService<TournamentAddOrUpdateViewModel>("Vytvoření / úprava turnaje", serviceProvider);
         }
 
         private INavigationService CreateContestantAddOrUpdateNavigationService(IServiceProvider serviceProvider)
         {
-            string name = "Vytvoření / úprava závodníka";
-            return new NavigationService<ContestantAddOrUpdateViewModel>(
-                serviceProvider.GetRequiredService<NavigationStore>(),
-                () => serviceProvider.GetRequiredService<ContestantAddOrUpdateViewModel>(),
-                name);
+            return CreateNavigationService<ContestantAddOrUpdateViewModel>("Vytvoření / úprava závodníka", serviceProvider);
         }
-
-
-        /*
-        private INavigationService CreateHomeNavigationService(IServiceProvider serviceProvider)
-        {
-            string name = "Menu";
-            return new NavigationService<HomeViewModel>(
-                serviceProvider.GetRequiredService<NavigationStore>(),
-                () => serviceProvider.GetRequiredService<HomeViewModel>(),
-                name);
-        }
-        */
 
     }
 }

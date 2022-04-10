@@ -12,6 +12,9 @@
 
   <ItemGroup>
     <Folder Include="Converters\" />
+    <Folder Include="ViewModels\Contestant\" />
+    <Folder Include="ViewModels\Basic\" />
+    <Folder Include="ViewModels\Tournament\" />
   </ItemGroup>
 
 </Project>
