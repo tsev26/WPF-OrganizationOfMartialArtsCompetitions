@@ -11,12 +11,16 @@
     d:DesignHeight="800"
     d:DesignWidth="1200"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
     <StackPanel>
         <TextBlock
-            Margin="25"
+            Margin="0,25,0,0"
             HorizontalAlignment="Center"
+            d:Text="Název turnaje"
             FontSize="20"
-            Text="Název turnaje - binding" />
+            Text="{Binding SelectedTournament.Name}" />
 
         <Grid>
             <Grid.ColumnDefinitions>
@@ -26,11 +30,42 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0">
+
                 <TextBlock
                     Margin="25"
                     HorizontalAlignment="Center"
                     FontSize="20"
                     Text="Část turnaje" />
+
+
+                <ListView
+                    x:Name="TournamentBrackets"
+                    MaxHeight="400"
+                    Margin="0,5"
+                    HorizontalAlignment="Center"
+                    FontSize="14"
+                    ItemsSource="{Binding Bracket}"
+                    SelectedItem="{Binding SelectedBracket, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    SelectionMode="Single">
+                    <ListView.View>
+                        <GridView>
+                            <GridView.ColumnHeaderContainerStyle>
+                                <Style TargetType="GridViewColumnHeader">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </Style>
+                            </GridView.ColumnHeaderContainerStyle>
+                            <GridViewColumn
+                                Width="250"
+                                DisplayMemberBinding="{Binding Name}"
+                                Header="Část turnaje" />
+                        </GridView>
+                    </ListView.View>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
             </StackPanel>
 
             <StackPanel Grid.Column="1">
@@ -39,14 +74,252 @@
                     HorizontalAlignment="Center"
                     FontSize="20"
                     Text="Zápasy" />
+
+                <ListView
+                    x:Name="BracketsMatches"
+                    MaxHeight="400"
+                    Margin="0,5"
+                    HorizontalAlignment="Center"
+                    FontSize="14"
+                    ItemsSource="{Binding Matches}"
+                    SelectedItem="{Binding SelectedMatch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    SelectionMode="Single">
+                    <ListView.View>
+                        <GridView>
+                            <GridView.ColumnHeaderContainerStyle>
+                                <Style TargetType="GridViewColumnHeader">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </Style>
+                            </GridView.ColumnHeaderContainerStyle>
+                            <GridViewColumn Width="100" DisplayMemberBinding="{Binding ContestantA.ShortName}" />
+                            <GridViewColumn Width="25" DisplayMemberBinding="{Binding ScoreContestantA}" />
+                            <GridViewColumn Width="25" DisplayMemberBinding="{Binding ScoreContestantB}" />
+                            <GridViewColumn Width="100" DisplayMemberBinding="{Binding ContestantB.ShortName}" />
+                        </GridView>
+                    </ListView.View>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
             </StackPanel>
 
             <StackPanel Grid.Column="2">
                 <TextBlock
-                    Margin="25"
+                    Margin="0,25,0,0"
                     HorizontalAlignment="Center"
                     FontSize="20"
                     Text="Konkrétní zápas" />
+                <StackPanel Visibility="{Binding IsMatchSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <StackPanel
+                        Margin="0,2,0,0"
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal"
+                        Visibility="{Binding Path=HasMatchNotFinished, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <TextBlock FontSize="18" Text="Vítěz: " />
+                        <TextBlock FontSize="18" Text="{Binding SelectedMatch.Winner.LastName}" />
+                        <TextBlock FontSize="18" Text=" " />
+                        <TextBlock FontSize="18" Text="{Binding SelectedMatch.Winner.FirstName}" />
+                    </StackPanel>
+
+                    <Grid Margin="20,0,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" HorizontalAlignment="Center">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock FontSize="14" Text="{Binding SelectedMatch.ContestantA.LastName}" />
+                                <TextBlock FontSize="14" Text=" " />
+                                <TextBlock FontSize="14" Text="{Binding SelectedMatch.ContestantA.FirstName}" />
+                            </StackPanel>
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                FontSize="14"
+                                Text="{Binding SelectedMatch.ScoreContestantA}" />
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                FontSize="14"
+                                Text="{Binding SelectedMatch.ScoreContestantAString}" />
+
+                            <WrapPanel
+                                Name="WrapPanelA"
+                                Width="90"
+                                Orientation="Horizontal">
+                                <Button
+                                    Width="20"
+                                    Height="20"
+                                    Margin="1"
+                                    Command="{Binding SetScoreCommand}"
+                                    CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                                    Content="M"
+                                    Visibility="{Binding HasMatchFinished, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                <Button
+                                    Width="20"
+                                    Height="20"
+                                    Margin="1"
+                                    Command="{Binding SetScoreCommand}"
+                                    CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                                    Content="K"
+                                    Visibility="{Binding HasMatchFinished, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                <Button
+                                    Width="20"
+                                    Height="20"
+                                    Margin="1"
+                                    Command="{Binding SetScoreCommand}"
+                                    CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                                    Content="D"
+                                    Visibility="{Binding HasMatchFinished, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                <Button
+                                    Width="20"
+                                    Height="20"
+                                    Margin="1"
+                                    Command="{Binding SetScoreCommand}"
+                                    CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                                    Content="T"
+                                    Visibility="{Binding HasMatchFinished, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                <Button
+                                    Width="20"
+                                    Height="20"
+                                    Margin="1"
+                                    Command="{Binding SetScoreCommand}"
+                                    CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                                    Content="H"
+                                    Visibility="{Binding HasMatchFinished, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                                <Button
+                                    Width="20"
+                                    Height="20"
+                                    Margin="1"
+                                    Command="{Binding SetScoreCommand}"
+                                    CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                                    Content="▲"
+                                    Visibility="{Binding HasMatchFinished, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                <Button
+                                    Width="20"
+                                    Height="20"
+                                    Margin="1"
+                                    Command="{Binding SetScoreCommand}"
+                                    CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                                    Content="Ht"
+                                    Visibility="{Binding IsMatchZeroZero, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                <Button
+                                    Width="20"
+                                    Height="20"
+                                    Margin="1"
+                                    Command="{Binding SetScoreCommand}"
+                                    CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                                    Content="●●"
+                                    Visibility="{Binding IsMatchZeroZero, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                            </WrapPanel>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" HorizontalAlignment="Center">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock FontSize="14" Text="{Binding SelectedMatch.ContestantB.LastName}" />
+                                <TextBlock FontSize="14" Text=" " />
+                                <TextBlock FontSize="14" Text="{Binding SelectedMatch.ContestantB.FirstName}" />
+                            </StackPanel>
+
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                FontSize="14"
+                                Text="{Binding SelectedMatch.ScoreContestantB}" />
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                FontSize="14"
+                                Text="{Binding SelectedMatch.ScoreContestantBString}" />
+                            <WrapPanel
+                                Name="WrapPanelB"
+                                Width="90"
+                                Orientation="Horizontal">
+                                <Button
+                                    Width="20"
+                                    Height="20"
+                                    Margin="1"
+                                    Command="{Binding SetScoreCommand}"
+                                    CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                                    Content="M"
+                                    Visibility="{Binding HasMatchFinished, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                <Button
+                                    Width="20"
+                                    Height="20"
+                                    Margin="1"
+                                    Command="{Binding SetScoreCommand}"
+                                    CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                                    Content="K"
+                                    Visibility="{Binding HasMatchFinished, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                <Button
+                                    Width="20"
+                                    Height="20"
+                                    Margin="1"
+                                    Command="{Binding SetScoreCommand}"
+                                    CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                                    Content="D"
+                                    Visibility="{Binding HasMatchFinished, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                <Button
+                                    Width="20"
+                                    Height="20"
+                                    Margin="1"
+                                    Command="{Binding SetScoreCommand}"
+                                    CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                                    Content="T"
+                                    Visibility="{Binding HasMatchFinished, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                <Button
+                                    Width="20"
+                                    Height="20"
+                                    Margin="1"
+                                    Command="{Binding SetScoreCommand}"
+                                    CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                                    Content="H"
+                                    Visibility="{Binding HasMatchFinished, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                                <Button
+                                    Width="20"
+                                    Height="20"
+                                    Margin="1"
+                                    Command="{Binding SetScoreCommand}"
+                                    CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                                    Content="▲"
+                                    Visibility="{Binding HasMatchFinished, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                <Button
+                                    Width="20"
+                                    Height="20"
+                                    Margin="1"
+                                    Command="{Binding SetScoreCommand}"
+                                    CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                                    Content="Ht"
+                                    Visibility="{Binding IsMatchZeroZero, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                <Button
+                                    Width="20"
+                                    Height="20"
+                                    Margin="1"
+                                    Command="{Binding SetScoreCommand}"
+                                    CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                                    Content="●●"
+                                    Visibility="{Binding IsMatchZeroZero, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+
+                            </WrapPanel>
+                        </StackPanel>
+
+
+                    </Grid>
+                    <Button
+                        Width="20"
+                        Height="20"
+                        Margin="20,10,0,0"
+                        HorizontalAlignment="Center"
+                        Command="{Binding SetScoreCommand}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                        Content="x"
+                        Visibility="{Binding HasMatchFinished, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                </StackPanel>
+
+
             </StackPanel>
         </Grid>
     </StackPanel>

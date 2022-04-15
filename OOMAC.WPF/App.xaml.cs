@@ -65,7 +65,9 @@ namespace OOMAC.WPF
                                                                                 CreateContestantNavigationService(s),
                                                                                 s.GetRequiredService<ContestantDataService>()));
 
-            services.AddSingleton<TournamentSelectedViewModel>();
+            services.AddSingleton<TournamentSelectedViewModel>(s => new TournamentSelectedViewModel(
+                                                                            s.GetRequiredService<TournamentStore>(), 
+                                                                            s.GetRequiredService<TournamentDataService>()));
 
             services.AddSingleton<MainViewModel>();
 

@@ -9,6 +9,8 @@ namespace OOMAC.EF
         public DbSet<Tournament> Tournaments { get; set; }
         public DbSet<Contestant> Contestants { get; set; }
 
+        public DbSet<Match> Matches { get; set; }
+
         public OOMACDBContext(DbContextOptions options) : base(options) { }
 
     }

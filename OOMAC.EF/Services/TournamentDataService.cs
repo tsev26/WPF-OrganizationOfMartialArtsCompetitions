@@ -29,15 +29,17 @@ namespace OOMAC.EF.Services
             return await _genericDataService.Delete(id);
         }
 
-        public async Task<Tournament> Get(int id)
+
+        public Tournament Get(int id)
         {
 
             using (OOMACDBContext context = _contextFactory.CreateDbContext())
             {
-                Tournament entity = await context.Set<Tournament>()
+                Tournament entity = context.Set<Tournament>()
                                                             .Include(s => s.Contestans)
                                                             .Include(s => s.Brackets)
-                                                            .FirstOrDefaultAsync((e) => e.Id == id);
+                                                            .ThenInclude(s => s.Matches)
+                                                            .FirstOrDefault((e) => e.Id == id);
                 return entity;
             }
         }
@@ -49,6 +51,7 @@ namespace OOMAC.EF.Services
                 IEnumerable<Tournament> entities = await context.Set<Tournament>()
                                                                 .Include(s => s.Contestans)
                                                                 .Include(s => s.Brackets)
+                                                                .ThenInclude(s => s.Matches)
                                                                 .ToListAsync();
                 return entities;
             }
@@ -122,17 +125,24 @@ namespace OOMAC.EF.Services
                     {
                         Bracket bracketGroup = new Bracket { TournamentId = tournamentId, Round = 0, Group = group };
 
-                        int contestantPosition = 0 + group;
-                        
-                        /*
-                        Contestant contestantA = new Contestant { Id = contestants[contestantPosition].Id };
-                        Contestant contestantB = new Contestant { Id = contestants[contestantPosition+1].Id };
-                        Contestant contestantC = new Contestant { Id = contestants[contestantPosition+2].Id };
-                        */
+                        int contestantPosition = 0 + group * 3;
 
-                        Match match1 = new Match { Bracket = bracketGroup, ContestantA = contestants[contestantPosition], ContestantB = contestants[contestantPosition + 1] };
-                        Match match2 = new Match { Bracket = bracketGroup, ContestantA = contestants[contestantPosition], ContestantB = contestants[contestantPosition + 2] };
-                        Match match3 = new Match { Bracket = bracketGroup, ContestantA = contestants[contestantPosition + 1], ContestantB = contestants[contestantPosition + 2] };
+
+                        Contestant contestantA = new Contestant { Id = contestants[contestantPosition].Id };
+                        context.Contestants.Add(contestantA);
+                        context.Contestants.Attach(contestantA);
+
+                        Contestant contestantB = new Contestant { Id = contestants[contestantPosition + 1].Id };
+                        context.Contestants.Add(contestantB);
+                        context.Contestants.Attach(contestantB);
+
+                        Contestant contestantC = new Contestant { Id = contestants[contestantPosition + 2].Id };
+                        context.Contestants.Add(contestantC);
+                        context.Contestants.Attach(contestantC);
+
+                        Match match1 = new Match { Bracket = bracketGroup, ContestantA = contestantA, ContestantB = contestantB };
+                        Match match2 = new Match { Bracket = bracketGroup, ContestantA = contestantC, ContestantB = contestantA };
+                        Match match3 = new Match { Bracket = bracketGroup, ContestantA = contestantB, ContestantB = contestantC };
 
                         bracketGroup.Matches = new List<Match>();
                         bracketGroup.Matches.Add(match1);
@@ -172,6 +182,75 @@ namespace OOMAC.EF.Services
                 {
                     string x = e.Message;
                 }
+            }
+        }
+
+
+        public Tournament SetScore(int matchId, int contestantId, string scoreToAdd)
+        {
+            using (OOMACDBContext context = _contextFactory.CreateDbContext())
+            {
+                try
+                {
+                    //Match match = context.Matches.Single(x => x.Id == matchId);
+                    Match match = context.Set<Match>().Include(x => x.ContestantA).Include(x => x.ContestantB).Include(x => x.Bracket).FirstOrDefault(x => x.Id == matchId);
+                    //Match match = new Match { Id = matchId };
+
+
+                    if (match.ContestantA.Id == contestantId)
+                    {
+                        if (scoreToAdd == "▲" && match.ScoreContestantAString.Contains("▲"))
+                        {
+                            match.ScoreContestantAString = match.ScoreContestantAString.Replace("▲", string.Empty);
+                            match.ScoreContestantBString += "H";
+                            match.ScoreContestantB += 1;
+                        }
+                        else
+                        {
+                            match.ScoreContestantAString += scoreToAdd;
+                            if (scoreToAdd == "●●")
+                            {
+                                match.ScoreContestantB = 2;
+                            }
+                            if (scoreToAdd is "M" or "D" or "K" or "T" or "H" or "Ht")
+                            {
+                                match.ScoreContestantA += 1;
+                            }
+                        }
+                    }
+                    else if (match.ContestantB.Id == contestantId)
+                    {
+                        if (scoreToAdd == "▲" && match.ScoreContestantBString.Contains("▲"))
+                        {
+                            match.ScoreContestantBString = match.ScoreContestantBString.Replace("▲", string.Empty);
+                            match.ScoreContestantAString += "H";
+                            match.ScoreContestantA += 1;
+                        }
+                        else
+                        {
+                            match.ScoreContestantBString += scoreToAdd;
+                            if (scoreToAdd == "●●")
+                            {
+                                match.ScoreContestantA = 2;
+                            }
+                            if (scoreToAdd is "M" or "D" or "K" or "T" or "H" or "Ht")
+                            {
+                                match.ScoreContestantB += 1;
+                            }
+                        }
+                    }
+
+                    context.Matches.Add(match);
+                    context.Matches.Attach(match);
+                    context.SaveChanges();
+
+                    return Get(match.Bracket.TournamentId);
+                }
+                catch (Exception e)
+                {
+                    string x = e.Message;
+                }
+                return null;
             }
         }
 

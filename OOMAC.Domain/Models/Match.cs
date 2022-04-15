@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
@@ -10,39 +11,45 @@ namespace OOMAC.Domain.Models
         [Column("MatId")]
         public new int Id { get; set; }
 
+        public Contestant? ContestantA { get; set; }
 
-        public Contestant ContestantA { get; set; }
+        public Contestant? ContestantB { get; set; }
 
-
-        [Column("MatScoreAId")]
+        [Column("MatScoreA")]
+        [DefaultValue("")]
         public string ScoreContestantAString { get; set; }
 
-
-        public Contestant ContestantB { get; set; }
-
-        [Column("MatScoreBId")]
+        [Column("MatScoreB")]
+        [DefaultValue("")]
         public string ScoreContestantBString { get; set; }
-
 
         public Bracket Bracket { get; set; }
 
-        public int ScoreContestantA => CountScore(ScoreContestantAString);
-        public int ScoreContestantB => CountScore(ScoreContestantBString);
+        [Column("MatScoreAInt")]
+        [DefaultValue("0")]
+        public int ScoreContestantA { get; set; }
+
+        [Column("MatScoreBInt")]
+        [DefaultValue("0")]
+        public int ScoreContestantB { get; set; }
 
         public Contestant Winner
         {
             get
             {
-                if (ScoreContestantA == 2) return ContestantA;
-                if (ScoreContestantB == 2) return ContestantB;
+                if (ScoreContestantA == 2 || ScoreContestantAString.Contains("Ht")) return ContestantA;
+                if (ScoreContestantB == 2 || ScoreContestantBString.Contains("Ht")) return ContestantB;
                 return null;
             }
         }
 
         public bool HasWinner => Winner != null;
 
+        public bool HasFinished => Winner != null || ScoreContestantAString.Contains("x") || ScoreContestantBString.Contains("x");
+
         private static int CountScore(string scoreString)
         {
+            if (scoreString == null) return 0;
             int countScore = 0;
             countScore += scoreString.Count(f => f == 'M');
             countScore += scoreString.Count(f => f == 'D');
@@ -52,5 +59,17 @@ namespace OOMAC.Domain.Models
             return countScore;
         }
 
+        public string Name
+        {
+            get
+            {
+                string contestantA = ContestantA == null ? "" : ContestantA.LastName + " " + ContestantA.FirstName.Substring(0, 1);
+                string contestantB = ContestantB == null ? "" : ContestantB.LastName + " " + ContestantB.FirstName.Substring(0, 1);
+                string contestantAScore = ScoreContestantA.ToString();
+                string contestantBScore = ScoreContestantB.ToString();
+
+                return contestantA + " " + contestantAScore + " - " + contestantBScore + " " + contestantB;
+            }
+        }
     }
 }

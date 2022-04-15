@@ -36,6 +36,8 @@ namespace OOMAC.Domain.Models
 
         public string TechSkillString => GetEnumDescription(TechSkill);
 
+        public string ShortName => LastName + " " + FirstName.Substring(0, 1);
+
         public enum TechnicalSkill
         {
             [Description("10kyu")]

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OOMAC.EF;
 
 namespace OOMAC.EF.Migrations
 {
     [DbContext(typeof(OOMACDBContext))]
-    partial class OOMACDBContextModelSnapshot : ModelSnapshot
+    [Migration("20220415181950_UpdatesToMatch")]
+    partial class UpdatesToMatch
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -112,6 +114,7 @@ namespace OOMAC.EF.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("ScoreContestantA")
+                        .ValueGeneratedOnUpdateSometimes()
                         .HasColumnType("int")
                         .HasColumnName("MatScoreAInt");
 
@@ -120,8 +123,9 @@ namespace OOMAC.EF.Migrations
                         .HasColumnName("MatScoreA");
 
                     b.Property<int>("ScoreContestantB")
+                        .ValueGeneratedOnUpdateSometimes()
                         .HasColumnType("int")
-                        .HasColumnName("MatScoreBInt");
+                        .HasColumnName("MatScoreAInt");
 
                     b.Property<string>("ScoreContestantBString")
                         .HasColumnType("nvarchar(max)")

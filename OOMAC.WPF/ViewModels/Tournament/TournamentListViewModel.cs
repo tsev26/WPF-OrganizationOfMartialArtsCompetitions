@@ -42,6 +42,7 @@ namespace OOMAC.WPF.ViewModels
             {
                 _ = _tournamentStore.LoadAsync();
                 _tournamentStore.Unselect();
+                SelectedTournament = _tournamentStore.SelectedTournament;
 
                 return "";
             }

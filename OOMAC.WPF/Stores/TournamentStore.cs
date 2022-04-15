@@ -44,7 +44,7 @@ namespace OOMAC.WPF.Stores
 
         public async Task UpdateSelectedAsync(int tournamentId)
         {
-            Tournament selectedTournament = await _tournamentService.Get(tournamentId);
+            Tournament selectedTournament = _tournamentService.Get(tournamentId);
             SelectedTournament = selectedTournament;
         }
 
