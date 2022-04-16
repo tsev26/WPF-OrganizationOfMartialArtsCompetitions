@@ -125,7 +125,7 @@
                             <GridView>
                                 <GridViewColumn
                                     Width="150"
-                                    DisplayMemberBinding="{Binding ConName}"
+                                    DisplayMemberBinding="{Binding Contestant.ShortName}"
                                     Header="Závodník" />
                                 <GridViewColumn
                                     Width="50"

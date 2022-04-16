@@ -36,6 +36,10 @@ namespace OOMAC.WPF.Commands
                     {
                         _tournamentStore.SelectedTournament = _tournamentDataService.SetScore(selectedMatch.Id, selectedMatch.ContestantB.Id, setValue);
                     }
+                } 
+                else if (setValue == "x")
+                {
+                    _tournamentStore.SelectedTournament = _tournamentDataService.SetScore(selectedMatch.Id, selectedMatch.ContestantA.Id, setValue);
                 }
             }
 

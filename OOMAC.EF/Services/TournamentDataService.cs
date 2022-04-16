@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OOMAC.Domain.Models;
+using OOMAC.Domain.Models.Calculating;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -205,6 +206,11 @@ namespace OOMAC.EF.Services
                             match.ScoreContestantBString += "H";
                             match.ScoreContestantB += 1;
                         }
+                        else if (scoreToAdd == "x")
+                        {
+                            match.ScoreContestantAString += scoreToAdd;
+                            match.ScoreContestantBString += scoreToAdd;
+                        }
                         else
                         {
                             match.ScoreContestantAString += scoreToAdd;
@@ -226,6 +232,11 @@ namespace OOMAC.EF.Services
                             match.ScoreContestantAString += "H";
                             match.ScoreContestantA += 1;
                         }
+                        else if (scoreToAdd == "x")
+                        {
+                            match.ScoreContestantAString += scoreToAdd;
+                            match.ScoreContestantBString += scoreToAdd;
+                        }
                         else
                         {
                             match.ScoreContestantBString += scoreToAdd;
@@ -244,6 +255,14 @@ namespace OOMAC.EF.Services
                     context.Matches.Attach(match);
                     context.SaveChanges();
 
+                    if (CheckIfMatchIsCompleted(match))
+                    {
+                        if (CheckIfRoundIsCompleted(matchId))
+                        {
+                            return AdvanceContestantsToNextRound(matchId);
+                        }
+                    }
+
                     return Get(match.Bracket.TournamentId);
                 }
                 catch (Exception e)
@@ -257,6 +276,129 @@ namespace OOMAC.EF.Services
         public async Task<Tournament> Update(int id, Tournament entity)
         {
             return await _genericDataService.Update(id, entity);
+        }
+
+        public bool CheckIfRoundIsCompleted(int matchId)
+        {
+            using (OOMACDBContext context = _contextFactory.CreateDbContext())
+            {
+                try
+                {
+                    Match match = context.Set<Match>()
+                                    .Include(x => x.ContestantA)
+                                    .Include(x => x.ContestantB)
+                                    .Include(x => x.Bracket)
+                                        .ThenInclude(x => x.Tournament)
+                                        .ThenInclude(x => x.Brackets)
+                                        .ThenInclude(x => x.Matches)
+                                    .FirstOrDefault(x => x.Id == matchId);
+
+                    if (match.Bracket.Round == 0)
+                    {
+                        List<Bracket> groups = match.Bracket.Tournament.Brackets.Where(x => x.Round == 0).ToList();
+                        foreach (Bracket group in groups)
+                        {
+                            foreach (Match m in group.Matches)
+                            {
+                                if (!m.HasFinished) return false;
+                            }
+                            return true;
+                        }
+                    }
+                    int currentRoundNumber = match.Bracket.Round;
+                    List<Match> matches = match.Bracket.Matches.Where(x => x.Bracket.Round == currentRoundNumber).ToList();
+                    foreach (Match m in matches)
+                    {
+                        if (!m.HasFinished) return false;
+                    }
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    string x = e.Message;
+                }
+                return false;
+            }
+        }
+
+        public bool CheckIfMatchIsCompleted(Match match)
+        {
+            return match.HasFinished;
+        }
+
+        public Tournament AdvanceContestantsToNextRound(int matchId)
+        {
+            using (OOMACDBContext context = _contextFactory.CreateDbContext())
+            {
+                try
+                {
+                    Match match = context.Set<Match>()
+                                    .Include(x => x.ContestantA)
+                                    .Include(x => x.ContestantB)
+                                    .Include(x => x.Bracket)
+                                        .ThenInclude(x => x.Tournament)
+                                        .ThenInclude(x => x.Brackets)
+                                        .ThenInclude(x => x.Matches)
+                                    .FirstOrDefault(x => x.Id == matchId);
+
+                    if (match.Bracket.Round == 0)
+                    {
+
+                        List<Bracket> groups = match.Bracket.Tournament.Brackets.Where(x => x.Round == 0).OrderBy(x => x.Id).ToList();
+                        Bracket round = match.Bracket.Tournament.Brackets.Where(x => x.Round == 1).First();
+                        int numberOfGroups = groups.Count();
+                        for (int i = 0; i < groups.Count(); i++)
+                        {
+                            
+                            List<GroupTableSlim> groupFirstPlace = groups[i].Matches.Where(x => x.Bracket.Round == 0).Select(x => new GroupTableSlim { ConId = x.ContestantAId, PointsObtained = x.ScoreContestantA }).Concat(groups[i].Matches.Where(x => x.Bracket.Round == 0).Select(x => new GroupTableSlim { ConId = x.ContestantBId, PointsObtained = x.ScoreContestantB })).GroupBy(s => s.ConId).Select(x => new GroupTableSlim { ConId = x.First().ConId, PointsObtained = x.Sum(x => x.PointsObtained) }).OrderByDescending(x => x.PointsObtained).ToList();
+                            List<GroupTableSlim> groupSecondPlace = groups[numberOfGroups - 1].Matches.Where(x => x.Bracket.Round == 0).Select(x => new GroupTableSlim { ConId = x.ContestantAId, PointsObtained = x.ScoreContestantA }).Concat(groups[numberOfGroups - 1].Matches.Where(x => x.Bracket.Round == 0).Select(x => new GroupTableSlim { ConId = x.ContestantBId, PointsObtained = x.ScoreContestantB })).GroupBy(s => s.ConId).Select(x => new GroupTableSlim { ConId = x.First().ConId, PointsObtained = x.Sum(x => x.PointsObtained) }).OrderByDescending(x => x.PointsObtained).ToList();
+                            int contestantFirstPlaceId = groupFirstPlace.First().ConId;
+                            int contestantSecondPlaceId = groupSecondPlace.Skip(1).First().ConId;
+
+                            round.Matches[i].ContestantAId = contestantFirstPlaceId;
+                            round.Matches[i].ContestantBId = contestantSecondPlaceId;
+
+                            Match matchToUpdate = round.Matches[i];
+
+                            context.Matches.Add(matchToUpdate);
+                            context.Matches.Attach(matchToUpdate);
+                            context.SaveChanges();
+
+                            numberOfGroups--;
+                        }
+                    }
+                    else if (match.Bracket.Matches.Count != 1)
+                    {
+                        int currentRoundNumber = match.Bracket.Round;
+
+                        List<Match> currentRoundMatches = match.Bracket.Tournament.Brackets.Where(x => x.Round == currentRoundNumber).First().Matches.OrderBy(x => x.Id).ToList();
+
+                        Bracket nextRound = match.Bracket.Tournament.Brackets.Where(x => x.Round == (currentRoundNumber + 1)).First(); 
+                        int numberOfMatchesInRound = currentRoundMatches.Count;
+
+                        for (int i = 0; i < numberOfMatchesInRound / 2; i++)
+                        {
+
+                            nextRound.Matches[i].ContestantAId = currentRoundMatches[i * 2].ContestantWinnerId;
+                            nextRound.Matches[i].ContestantBId = currentRoundMatches[(i * 2) + 1].ContestantWinnerId;
+
+                            Match matchToUpdate = nextRound.Matches[i];
+
+                            context.Matches.Add(matchToUpdate);
+                            context.Matches.Attach(matchToUpdate);
+                            context.SaveChanges();
+                        }
+
+                    }
+                    return Get(match.Bracket.TournamentId);
+                }
+                catch (Exception e)
+                {
+                    string x = e.Message;
+                }
+                return null;
+            }
+
         }
     }
 }

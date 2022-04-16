@@ -86,7 +86,7 @@ namespace OOMAC.WPF.ViewModels
 
         public List<Match> Matches => SelectedBracket?.Matches.ToList();
 
-        public List<GroupTable> GroupTablesSum => Matches.Where(x => x.Bracket.Round == 0).Select(x => new GroupTable { ConName = x.ContestantA.ShortName, MatchedPlayed = x.HasFinished ? 1 : 0, PointsObtained = x.ScoreContestantA }).Concat(Matches.Where(x => x.Bracket.Round == 0).Select(x => new GroupTable { ConName = x.ContestantB.ShortName, MatchedPlayed = x.HasFinished ? 1 : 0, PointsObtained = x.ScoreContestantB })).GroupBy(s => s.ConName).Select(x => new GroupTable { ConName = x.First().ConName, MatchedPlayed = x.Sum(x => x.MatchedPlayed), PointsObtained = x.Sum(x => x.PointsObtained) }).OrderByDescending(x => x.PointsObtained).ToList();
+        public List<GroupTable> GroupTablesSum => Matches.Where(x => x.Bracket.Round == 0).Select(x => new GroupTable { Contestant = x.ContestantA, MatchedPlayed = x.HasFinished ? 1 : 0, PointsObtained = x.ScoreContestantA }).Concat(Matches.Where(x => x.Bracket.Round == 0).Select(x => new GroupTable { Contestant = x.ContestantB, MatchedPlayed = x.HasFinished ? 1 : 0, PointsObtained = x.ScoreContestantB })).GroupBy(s => s.Contestant).Select(x => new GroupTable { Contestant = x.First().Contestant, MatchedPlayed = x.Sum(x => x.MatchedPlayed), PointsObtained = x.Sum(x => x.PointsObtained) }).OrderByDescending(x => x.PointsObtained).ToList();
 
         public bool ShowGroupTablesSum => SelectedBracket?.Round == 0;
 
