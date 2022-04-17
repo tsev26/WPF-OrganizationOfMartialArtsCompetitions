@@ -60,7 +60,7 @@ namespace OOMAC.WPF.ViewModels
         */
 
 
-        public List<Bracket> Bracket => SelectedTournament?.Brackets.ToList();
+        public List<Bracket> Bracket => SelectedTournament?.Brackets.OrderBy(x => x.Round).ThenBy(x => x.Id).ToList();
 
 
         private Bracket _selectedBracket;

@@ -11,10 +11,10 @@ namespace OOMAC.Domain.Models
         [Column("MatId")]
         public new int Id { get; set; }
 
-        public int ContestantAId { get; set; }
+        public int? ContestantAId { get; set; }
         public Contestant? ContestantA { get; set; }
 
-        public int ContestantBId { get; set; }
+        public int? ContestantBId { get; set; }
         public Contestant? ContestantB { get; set; }
 
         [Column("MatScoreA")]
@@ -49,8 +49,8 @@ namespace OOMAC.Domain.Models
         {
             get
             {
-                if (ScoreContestantA == 2 || ScoreContestantAString.Contains("Ht")) return ContestantAId;
-                if (ScoreContestantB == 2 || ScoreContestantBString.Contains("Ht")) return ContestantBId;
+                if (ScoreContestantA == 2 || ScoreContestantAString.Contains("Ht")) return ContestantAId ?? -1;
+                if (ScoreContestantB == 2 || ScoreContestantBString.Contains("Ht")) return ContestantBId ?? -1;
                 return -1;
             }
         }
@@ -61,11 +61,11 @@ namespace OOMAC.Domain.Models
         {
             get
             {
-                return ScoreContestantA == 2 || ScoreContestantAString.Contains("Ht") || ScoreContestantB == 2 || ScoreContestantBString.Contains("Ht");
+                return ScoreContestantA == 2 || (ScoreContestantAString ?? "").Contains("Ht") || ScoreContestantB == 2 || ScoreContestantBString.Contains("Ht");
             }
         }
 
-        public bool HasFinished => HasWinner || ScoreContestantAString.Contains("x") || ScoreContestantBString.Contains("x");
+        public bool HasFinished => HasWinner || (ScoreContestantAString ?? "").Contains("x") || ScoreContestantBString.Contains("x");
 
         private static int CountScore(string scoreString)
         {

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Engine.Shared;
+using Microsoft.EntityFrameworkCore;
 using OOMAC.Domain.Models;
 using OOMAC.Domain.Models.Calculating;
 using System;
@@ -114,9 +115,15 @@ namespace OOMAC.EF.Services
             {
                 try
                 {
+                    List<Contestant> randomizeContestants = contestants;
+                    randomizeContestants.Shuffle();
                     int contentantsInTournament = contestants.Count;
 
+                    int restAfterDivision = contentantsInTournament % 3;
+
                     int numberOfGroups = contentantsInTournament / 3;
+
+                    if (restAfterDivision != 0) numberOfGroups += 1;
 
                     Tournament tournamentContext = new Tournament { Id = tournamentId };
 
@@ -126,29 +133,63 @@ namespace OOMAC.EF.Services
                     {
                         Bracket bracketGroup = new Bracket { TournamentId = tournamentId, Round = 0, Group = group };
 
-                        int contestantPosition = 0 + group * 3;
+                        int contestantPosition = group * 3;
 
 
-                        Contestant contestantA = new Contestant { Id = contestants[contestantPosition].Id };
-                        context.Contestants.Add(contestantA);
-                        context.Contestants.Attach(contestantA);
+                        if ((restAfterDivision == 1 && (group + 1) == (numberOfGroups - 1)) || (restAfterDivision == 2 && group == (numberOfGroups - 1)))
+                        {
+                            Contestant contestantA = new Contestant { Id = randomizeContestants[contestantPosition].Id };
+                            context.Contestants.Add(contestantA);
+                            context.Contestants.Attach(contestantA);
 
-                        Contestant contestantB = new Contestant { Id = contestants[contestantPosition + 1].Id };
-                        context.Contestants.Add(contestantB);
-                        context.Contestants.Attach(contestantB);
+                            Contestant contestantB = new Contestant { Id = randomizeContestants[contestantPosition + 1].Id };
+                            context.Contestants.Add(contestantB);
+                            context.Contestants.Attach(contestantB);
 
-                        Contestant contestantC = new Contestant { Id = contestants[contestantPosition + 2].Id };
-                        context.Contestants.Add(contestantC);
-                        context.Contestants.Attach(contestantC);
+                            Match match1 = new Match { Bracket = bracketGroup, ContestantA = contestantA, ContestantB = contestantB, ScoreContestantAString = "", ScoreContestantBString = "" };
 
-                        Match match1 = new Match { Bracket = bracketGroup, ContestantA = contestantA, ContestantB = contestantB };
-                        Match match2 = new Match { Bracket = bracketGroup, ContestantA = contestantC, ContestantB = contestantA };
-                        Match match3 = new Match { Bracket = bracketGroup, ContestantA = contestantB, ContestantB = contestantC };
+                            bracketGroup.Matches = new List<Match>();
+                            bracketGroup.Matches.Add(match1);
+                        }
+                        else if (restAfterDivision == 1 && group == (numberOfGroups - 1))
+                        {
+                            Contestant contestantA = new Contestant { Id = randomizeContestants[contestantPosition - 1].Id };
+                            context.Contestants.Add(contestantA);
+                            context.Contestants.Attach(contestantA);
 
-                        bracketGroup.Matches = new List<Match>();
-                        bracketGroup.Matches.Add(match1);
-                        bracketGroup.Matches.Add(match2);
-                        bracketGroup.Matches.Add(match3);
+                            Contestant contestantB = new Contestant { Id = randomizeContestants[contestantPosition].Id };
+                            context.Contestants.Add(contestantB);
+                            context.Contestants.Attach(contestantB);
+
+                            Match match1 = new Match { Bracket = bracketGroup, ContestantA = contestantA, ContestantB = contestantB, ScoreContestantAString = "", ScoreContestantBString = "" };
+
+                            bracketGroup.Matches = new List<Match>();
+                            bracketGroup.Matches.Add(match1);
+                        }
+                        else //ideal scenario
+                        {
+                            Contestant contestantA = new Contestant { Id = randomizeContestants[contestantPosition].Id };
+                            context.Contestants.Add(contestantA);
+                            context.Contestants.Attach(contestantA);
+
+                            Contestant contestantB = new Contestant { Id = randomizeContestants[contestantPosition + 1].Id };
+                            context.Contestants.Add(contestantB);
+                            context.Contestants.Attach(contestantB);
+
+                            Contestant contestantC = new Contestant { Id = randomizeContestants[contestantPosition + 2].Id };
+                            context.Contestants.Add(contestantC);
+                            context.Contestants.Attach(contestantC);
+
+                            Match match1 = new Match { Bracket = bracketGroup, ContestantA = contestantA, ContestantB = contestantB, ScoreContestantAString = "", ScoreContestantBString = "" };
+                            Match match2 = new Match { Bracket = bracketGroup, ContestantA = contestantC, ContestantB = contestantA, ScoreContestantAString = "", ScoreContestantBString = "" };
+                            Match match3 = new Match { Bracket = bracketGroup, ContestantA = contestantB, ContestantB = contestantC, ScoreContestantAString = "", ScoreContestantBString = "" };
+
+                            bracketGroup.Matches = new List<Match>();
+                            bracketGroup.Matches.Add(match1);
+                            bracketGroup.Matches.Add(match2);
+                            bracketGroup.Matches.Add(match3);
+                        }
+
 
                         
                         tournamentContext.Brackets.Add(bracketGroup);
@@ -156,22 +197,26 @@ namespace OOMAC.EF.Services
                         
                     }
 
+                    //context.Tournaments.Update(tournamentContext);
+                    //context.Tournaments.Attach(tournamentContext);
+                    //context.SaveChanges();
 
-                    int numberOfRounds = (int)Math.Pow(numberOfGroups, 1.0 / 2);
+                    int numberOfRounds = (int)Math.Ceiling(Math.Pow(numberOfGroups, 1.0 / 2));
                     int currentBracket = numberOfRounds;
                     for (int bracketRound = 0; bracketRound <= currentBracket; bracketRound++)
                     {
                         Bracket bracket = new Bracket { TournamentId = tournamentId, Round = bracketRound + 1, Group = 0 };
                         bracket.Matches = new List<Match>();
-                        for (int i = 0; i < Math.Pow(2, numberOfRounds); i++)
+                        int numberOfMatches = (int)Math.Pow(2, numberOfRounds);
+                        for (int i = 0; i < numberOfMatches; i++)
                         {
-                            Match match = new Match { Bracket = bracket };
+                            Match match = new Match { Bracket = bracket, ScoreContestantAString = "", ScoreContestantBString = "" };
                             bracket.Matches.Add(match);
                         }
 
 
                         tournamentContext.Brackets.Add(bracket);
-                        numberOfRounds /= 2;
+                        numberOfRounds -= 1;
 
                     }
 
@@ -302,8 +347,8 @@ namespace OOMAC.EF.Services
                             {
                                 if (!m.HasFinished) return false;
                             }
-                            return true;
                         }
+                        return true;
                     }
                     int currentRoundNumber = match.Bracket.Round;
                     List<Match> matches = match.Bracket.Matches.Where(x => x.Bracket.Round == currentRoundNumber).ToList();
@@ -326,7 +371,7 @@ namespace OOMAC.EF.Services
             return match.HasFinished;
         }
 
-        public Tournament AdvanceContestantsToNextRound(int matchId)
+        public Tournament AdvanceContestantsToNextRound (int matchId)
         {
             using (OOMACDBContext context = _contextFactory.CreateDbContext())
             {
@@ -347,16 +392,42 @@ namespace OOMAC.EF.Services
                         List<Bracket> groups = match.Bracket.Tournament.Brackets.Where(x => x.Round == 0).OrderBy(x => x.Id).ToList();
                         Bracket round = match.Bracket.Tournament.Brackets.Where(x => x.Round == 1).First();
                         int numberOfGroups = groups.Count();
-                        for (int i = 0; i < groups.Count(); i++)
-                        {
-                            
-                            List<GroupTableSlim> groupFirstPlace = groups[i].Matches.Where(x => x.Bracket.Round == 0).Select(x => new GroupTableSlim { ConId = x.ContestantAId, PointsObtained = x.ScoreContestantA }).Concat(groups[i].Matches.Where(x => x.Bracket.Round == 0).Select(x => new GroupTableSlim { ConId = x.ContestantBId, PointsObtained = x.ScoreContestantB })).GroupBy(s => s.ConId).Select(x => new GroupTableSlim { ConId = x.First().ConId, PointsObtained = x.Sum(x => x.PointsObtained) }).OrderByDescending(x => x.PointsObtained).ToList();
-                            List<GroupTableSlim> groupSecondPlace = groups[numberOfGroups - 1].Matches.Where(x => x.Bracket.Round == 0).Select(x => new GroupTableSlim { ConId = x.ContestantAId, PointsObtained = x.ScoreContestantA }).Concat(groups[numberOfGroups - 1].Matches.Where(x => x.Bracket.Round == 0).Select(x => new GroupTableSlim { ConId = x.ContestantBId, PointsObtained = x.ScoreContestantB })).GroupBy(s => s.ConId).Select(x => new GroupTableSlim { ConId = x.First().ConId, PointsObtained = x.Sum(x => x.PointsObtained) }).OrderByDescending(x => x.PointsObtained).ToList();
-                            int contestantFirstPlaceId = groupFirstPlace.First().ConId;
-                            int contestantSecondPlaceId = groupSecondPlace.Skip(1).First().ConId;
+                        int numberOfMatchesInCurrentRound = round.Matches.Count();
 
-                            round.Matches[i].ContestantAId = contestantFirstPlaceId;
-                            round.Matches[i].ContestantBId = contestantSecondPlaceId;
+
+                        int cycleTo = numberOfMatchesInCurrentRound;
+
+                        for (int i = 0; i < cycleTo; i++) //groups.Count()
+                        {
+                            if (i < cycleTo - numberOfGroups)
+                            {
+                                List<GroupTableSlim> groupFirstPlace = groups[i].Matches.Where(x => x.Bracket.Round == 0).Select(x => new GroupTableSlim { ConId = x.ContestantAId, PointsObtained = x.ScoreContestantA }).Concat(groups[i].Matches.Where(x => x.Bracket.Round == 0).Select(x => new GroupTableSlim { ConId = x.ContestantBId, PointsObtained = x.ScoreContestantB })).GroupBy(s => s.ConId).Select(x => new GroupTableSlim { ConId = x.First().ConId, PointsObtained = x.Sum(x => x.PointsObtained) }).OrderByDescending(x => x.PointsObtained).ToList();
+                                int? contestantFirstPlaceId = groupFirstPlace.First().ConId;
+
+                                round.Matches[i].ContestantAId = contestantFirstPlaceId;
+                                round.Matches[i].ScoreContestantA = 2;
+                                round.Matches[i].ScoreContestantAString = "Autovítězství";
+                            }
+                            else if (i >= numberOfGroups)
+                            {
+                                List<GroupTableSlim> groupSecondPlace = groups[numberOfMatchesInCurrentRound - 1].Matches.Where(x => x.Bracket.Round == 0).Select(x => new GroupTableSlim { ConId = x.ContestantAId, PointsObtained = x.ScoreContestantA }).Concat(groups[numberOfMatchesInCurrentRound - 1].Matches.Where(x => x.Bracket.Round == 0).Select(x => new GroupTableSlim { ConId = x.ContestantBId, PointsObtained = x.ScoreContestantB })).GroupBy(s => s.ConId).Select(x => new GroupTableSlim { ConId = x.First().ConId, PointsObtained = x.Sum(x => x.PointsObtained) }).OrderByDescending(x => x.PointsObtained).ToList();
+                                int? contestantSecondPlaceId = groupSecondPlace.Skip(1).First().ConId;
+
+                                round.Matches[i].ContestantBId = contestantSecondPlaceId;
+                                round.Matches[i].ScoreContestantB = 2;
+                                round.Matches[i].ScoreContestantBString = "Autovítězství";
+                            }
+                            else
+                            {
+                                List<GroupTableSlim> groupFirstPlace = groups[i].Matches.Where(x => x.Bracket.Round == 0).Select(x => new GroupTableSlim { ConId = x.ContestantAId, PointsObtained = x.ScoreContestantA }).Concat(groups[i].Matches.Where(x => x.Bracket.Round == 0).Select(x => new GroupTableSlim { ConId = x.ContestantBId, PointsObtained = x.ScoreContestantB })).GroupBy(s => s.ConId).Select(x => new GroupTableSlim { ConId = x.First().ConId, PointsObtained = x.Sum(x => x.PointsObtained) }).OrderByDescending(x => x.PointsObtained).ToList();
+                                List<GroupTableSlim> groupSecondPlace = groups[numberOfMatchesInCurrentRound - 1].Matches.Where(x => x.Bracket.Round == 0).Select(x => new GroupTableSlim { ConId = x.ContestantAId, PointsObtained = x.ScoreContestantA }).Concat(groups[numberOfMatchesInCurrentRound - 1].Matches.Where(x => x.Bracket.Round == 0).Select(x => new GroupTableSlim { ConId = x.ContestantBId, PointsObtained = x.ScoreContestantB })).GroupBy(s => s.ConId).Select(x => new GroupTableSlim { ConId = x.First().ConId, PointsObtained = x.Sum(x => x.PointsObtained) }).OrderByDescending(x => x.PointsObtained).ToList();
+                                int? contestantFirstPlaceId = groupFirstPlace.First().ConId;
+                                int? contestantSecondPlaceId = groupSecondPlace.Skip(1).First().ConId;
+
+                                round.Matches[i].ContestantAId = contestantFirstPlaceId;
+                                round.Matches[i].ContestantBId = contestantSecondPlaceId;
+                            }
+
 
                             Match matchToUpdate = round.Matches[i];
 
@@ -364,7 +435,7 @@ namespace OOMAC.EF.Services
                             context.Matches.Attach(matchToUpdate);
                             context.SaveChanges();
 
-                            numberOfGroups--;
+                            numberOfMatchesInCurrentRound--;
                         }
                     }
                     else if (match.Bracket.Matches.Count != 1)
