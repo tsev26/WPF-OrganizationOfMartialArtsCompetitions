@@ -20,23 +20,23 @@ Samotný závod pak rozdělí závodníky náhodně do skupin (poolů) po třech
 - SQL
  
 **Časový plán (44 hodin)**
- 1) Zjištění zadání (2 hod)
- 2) Vypracování scénaře, požadavků, technologie, časového plánu, otázek (2 hod)
- 3) Návrh datové mapy (2 hod)
- 4) Návrh uživatelského rozhraní (3 hod)
- 5) Naplánování logiky aplikace (2 hod)
- 6) Návrh SQL databáze (1 hod)
- 8) Programování datové mapy a návrhu UI (4 hod)
- 9) Kontrola/Testování (1 hod)
- 10) Propojení s DB (2 hod)
- 11) Kontrola/Testování (1 hod)
- 12) Programování datové mapy a návrhu UI (6 hod)
- 13) Kontrola/Testování (1 hod)
- 14) Programování datové mapy a návrhu UI (6 hod)
- 15) Ladění a testování současného návrhu (4 hod)
- 16) Refactoring kódu (2 hod)
- 17) Testování aplikace (3 hod)
- 18) Příprava výsledného produktu (2 hod)
+ 1) Zjištění zadání (2 hod) - 2
+ 2) Vypracování scénaře, požadavků, technologie, časového plánu, otázek (2 hod) - 2
+ 3) Návrh datové mapy (2 hod) - 2
+ 4) Návrh uživatelského rozhraní (3 hod) - 5
+ 5) Naplánování logiky aplikace (2 hod) - 1
+ 6) Návrh SQL databáze (1 hod) - 1
+ 8) Programování datové mapy a návrhu UI (4 hod) - 4
+ 9) Kontrola/Testování (1 hod) - 0,5
+ 10) Propojení s DB (2 hod) - 4
+ 11) Kontrola/Testování (1 hod) - 0,5
+ 12) Programování datové mapy a návrhu UI (6 hod) - 6
+ 13) Kontrola/Testování (1 hod) - 0,5
+ 14) Programování datové mapy a návrhu UI (6 hod) - 6
+ 15) Ladění a testování současného návrhu (4 hod) - 5
+ 16) Refactoring kódu (2 hod) - 1
+ 17) Testování aplikace (3 hod) - 0,5
+ 18) Příprava výsledného produktu (2 hod) - 5
  
 **Otázky (na zadání pro zadavatele)**
 - Minimální počet závodníků pro turnaj?
