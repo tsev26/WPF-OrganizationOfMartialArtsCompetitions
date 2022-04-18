@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OOMAC.Domain.Models;
-
+using OOMAC.Domain.Models.Calculating;
 
 namespace OOMAC.EF
 {
@@ -10,6 +10,8 @@ namespace OOMAC.EF
         public DbSet<Contestant> Contestants { get; set; }
 
         public DbSet<Match> Matches { get; set; }
+
+        public DbSet<TournamentSummary> TournamentSummary { get; set; }
 
         public OOMACDBContext(DbContextOptions options) : base(options) { }
 

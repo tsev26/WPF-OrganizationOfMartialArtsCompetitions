@@ -58,7 +58,7 @@
                         Header="Závodníků" />
                     <GridViewColumn
                         Width="70"
-                        DisplayMemberBinding="{Binding Started}"
+                        DisplayMemberBinding="{Binding StartedString}"
                         Header="Zahájen" />
                     <!--
                     <GridViewColumn

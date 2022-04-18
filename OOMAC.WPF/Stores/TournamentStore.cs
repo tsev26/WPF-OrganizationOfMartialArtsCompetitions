@@ -1,4 +1,5 @@
 ﻿using OOMAC.Domain.Models;
+using OOMAC.Domain.Models.Calculating;
 using OOMAC.EF.Services;
 using System;
 using System.Collections.Generic;

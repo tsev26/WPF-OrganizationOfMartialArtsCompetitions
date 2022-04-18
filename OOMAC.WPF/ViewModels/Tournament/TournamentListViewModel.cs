@@ -1,4 +1,5 @@
 ﻿using OOMAC.Domain.Models;
+using OOMAC.Domain.Models.Calculating;
 using OOMAC.EF.Services;
 using OOMAC.WPF.Commands;
 using OOMAC.WPF.Services.Navigations;

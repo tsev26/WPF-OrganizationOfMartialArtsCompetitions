@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using static OOMAC.Domain.Models.Contestant;
 
 namespace OOMAC.Domain.Models
@@ -32,5 +33,9 @@ namespace OOMAC.Domain.Models
         public int CountContestants => Contestans?.Count ?? 0;
 
         public bool Started => Brackets?.Count > 0;
+
+        public string StartedString => Started ? "Ano" : "Ne";
+
+
     }
 }

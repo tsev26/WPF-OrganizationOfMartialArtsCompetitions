@@ -29,9 +29,10 @@ namespace OOMAC.Domain.Models
             {
                 if (Round == 0)
                 {
-                    int minIdOfGroup = Tournament.Brackets.Where(s => s.Round == 0).Min(s => s.Id);
-                    int numberOfGroups = Tournament.Brackets.Where(s => s.Round == 0).Count();
-                    return "Skupina " + ((char)(Id - minIdOfGroup + 65)).ToString();
+                    //int minIdOfGroup = Tournament.Brackets.Where(s => s.Round == 0).Min(s => s.Id);
+                    //int numberOfGroups = Tournament.Brackets.Where(s => s.Round == 0).Count();
+                    //return "Skupina " + ((char)(Id - minIdOfGroup + 65)).ToString();
+                    return "Skupina " + ((char)(Group + 65)).ToString();
                 }
                 int numberOfMatches = Matches.Count;
                 switch (numberOfMatches)

@@ -31,6 +31,25 @@ namespace OOMAC.EF.Services
             return await _genericDataService.Delete(id);
         }
 
+        public async Task<IEnumerable<TournamentSummary>> GetAllTournamentSummary()
+        {
+            try
+            {
+                using (OOMACDBContext context = _contextFactory.CreateDbContext())
+                {
+                    IEnumerable<TournamentSummary> entities = await context.Set<TournamentSummary>()
+                                                    .Include(s => s.CurrentBracket)
+                                                    .ToListAsync();
+                    return entities;
+                }
+            }
+            catch (Exception e)
+            {
+                var x = e;
+            }
+            return null;
+        }
+
 
         public Tournament Get(int id)
         {
@@ -201,7 +220,8 @@ namespace OOMAC.EF.Services
                     //context.Tournaments.Attach(tournamentContext);
                     //context.SaveChanges();
 
-                    int numberOfRounds = (int)Math.Ceiling(Math.Pow(numberOfGroups, 1.0 / 2));
+                    //int numberOfRounds = (int)Math.Round(Math.Pow(numberOfGroups, 1.0 / 2));
+                    int numberOfRounds = (int)Math.Round(Math.Log(numberOfGroups)/Math.Log(2));
                     int currentBracket = numberOfRounds;
                     for (int bracketRound = 0; bracketRound <= currentBracket; bracketRound++)
                     {

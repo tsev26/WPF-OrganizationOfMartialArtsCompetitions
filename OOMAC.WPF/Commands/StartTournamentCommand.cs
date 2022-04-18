@@ -2,6 +2,7 @@
 using OOMAC.EF.Services;
 using OOMAC.WPF.ViewModels;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace OOMAC.WPF.Commands
 {
@@ -14,6 +15,8 @@ namespace OOMAC.WPF.Commands
             _tournamentListViewModel = tournamentListViewModel;
             _tournamentDataService = tournamentDataService;
         }
+
+
         public override void Execute(object parameter)
         {
             Tournament tournament = _tournamentListViewModel.SelectedTournament;
@@ -29,5 +32,7 @@ namespace OOMAC.WPF.Commands
 
             _ = _tournamentListViewModel.RefreshView(tournament);
         }
+
+
     }
 }

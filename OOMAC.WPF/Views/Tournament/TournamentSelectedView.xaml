@@ -40,7 +40,8 @@
 
                 <ListView
                     x:Name="TournamentBrackets"
-                    MaxHeight="400"
+                    MaxHeight="350"
+
                     Margin="0,5"
                     HorizontalAlignment="Center"
                     FontSize="14"
@@ -55,7 +56,7 @@
                                 </Style>
                             </GridView.ColumnHeaderContainerStyle>
                             <GridViewColumn
-                                Width="250"
+                                Width="230"
                                 DisplayMemberBinding="{Binding Name}"
                                 Header="Část turnaje" />
                         </GridView>
@@ -77,7 +78,7 @@
 
                 <ListView
                     x:Name="BracketsMatches"
-                    MaxHeight="400"
+                    MaxHeight="350"
                     Margin="0,5"
                     HorizontalAlignment="Center"
                     FontSize="14"
@@ -91,10 +92,10 @@
                                     <Setter Property="Visibility" Value="Collapsed" />
                                 </Style>
                             </GridView.ColumnHeaderContainerStyle>
-                            <GridViewColumn Width="100" DisplayMemberBinding="{Binding ContestantA.ShortName}" />
+                            <GridViewColumn Width="90" DisplayMemberBinding="{Binding ContestantA.ShortName}" />
                             <GridViewColumn Width="25" DisplayMemberBinding="{Binding ScoreContestantA}" />
                             <GridViewColumn Width="25" DisplayMemberBinding="{Binding ScoreContestantB}" />
-                            <GridViewColumn Width="100" DisplayMemberBinding="{Binding ContestantB.ShortName}" />
+                            <GridViewColumn Width="90" DisplayMemberBinding="{Binding ContestantB.ShortName}" />
                         </GridView>
                     </ListView.View>
                     <ListView.ItemContainerStyle>
@@ -124,7 +125,7 @@
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn
-                                    Width="150"
+                                    Width="130"
                                     DisplayMemberBinding="{Binding Contestant.ShortName}"
                                     Header="Závodník" />
                                 <GridViewColumn
