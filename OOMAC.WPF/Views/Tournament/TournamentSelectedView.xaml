@@ -191,7 +191,8 @@
                             <WrapPanel
                                 Name="WrapPanelA"
                                 Width="90"
-                                Orientation="Horizontal">
+                                Orientation="Horizontal"
+                                Visibility="{Binding HasPlayers, Converter={StaticResource BooleanToVisibilityConverter}}">
                                 <Button
                                     Width="20"
                                     Height="20"
@@ -279,7 +280,8 @@
                             <WrapPanel
                                 Name="WrapPanelB"
                                 Width="90"
-                                Orientation="Horizontal">
+                                Orientation="Horizontal"
+                                Visibility="{Binding HasPlayers, Converter={StaticResource BooleanToVisibilityConverter}}">
                                 <Button
                                     Width="20"
                                     Height="20"

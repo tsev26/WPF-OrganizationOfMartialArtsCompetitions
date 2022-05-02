@@ -108,13 +108,17 @@ namespace OOMAC.WPF.ViewModels
             {
                 _selectedMatch = value;
                 OnPropertyChanged(nameof(SelectedMatch));
+                OnPropertyChanged(nameof(HasPlayers));
                 OnPropertyChanged(nameof(IsMatchSelected));
                 OnPropertyChanged(nameof(IsMatchZeroZero));
                 OnPropertyChanged(nameof(HasMatchFinished));
                 OnPropertyChanged(nameof(HasMatchNotFinished));
                 OnPropertyChanged(nameof(IsMatchOneOne));
+                
             }
         }
+
+        public bool HasPlayers => SelectedMatch?.ContestantA != null && SelectedMatch?.ContestantB != null;
 
         public bool IsMatchSelected => SelectedMatch != null;
 
